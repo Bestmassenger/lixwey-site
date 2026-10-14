@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lixwey — официальный сайт</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, #4A90D9 0%, #1456A0 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 { font-size: 32px; margin-bottom: 8px; }
+        header p { opacity: 0.9; font-size: 16px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card h2 { color: #1456A0; margin-bottom: 12px; font-size: 22px; }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4A90D9;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 12px;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #1456A0; }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .status-ok { background: #d4f5d4; color: #1a7a1a; }
+        .status-warn { background: #ffe4b5; color: #b8731a; }
+        .status-err { background: #ffd4d4; color: #b81a1a; }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lixwey</h1>
+        <p>Социальная сеть нового поколения</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>📢 Новости</h2>
+            <p>Здесь будут публиковаться новости проекта, обновления и анонсы.</p>
+            <p style="margin-top: 12px; color: #888; font-size: 14px;">
+                Пока новостей нет.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>📥 Скачать приложение</h2>
+            <p>Установите Lixwey на ваше устройство:</p>
+            <a href="#" class="btn">Android (APK)</a>
+            <a href="#" class="btn" style="background: #666;">Windows (скоро)</a>
+        </div>
+
+        <div class="card">
+            <h2>📝 Обратная связь</h2>
+            <p>Нашли баг или есть предложение? Напишите нам.</p>
+            <a href="reports.html" class="btn">Отправить жалобу</a>
+        </div>
+
+        <div class="card">
+            <h2>🔌 Статус сервисов</h2>
+            <p>
+                API: <span class="status status-warn">Проверка...</span>
+            </p>
+            <p style="margin-top: 8px;">
+                Основной сайт: <span class="status status-ok">Работает</span>
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Lixwey. Все права защищены.
+    </footer>
+</body>
+</html>
