@@ -539,9 +539,9 @@
       apiStatus.textContent = "Проверка…";
 
       try {
-        const response = await fetch("https://api.liхwey.example/health", {
-          method: "GET",
-          cache: "no-store"
+        const response = await fetch("https://api.lixwey.ru/ping", {
+            method: "GET",
+            cache: "no-store"
         });
 
         if (response.ok) {
