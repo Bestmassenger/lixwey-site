@@ -6,6 +6,7 @@
   <title>Lixwey — социальная сеть нового поколения</title>
   <meta name="description" content="Lixwey — современная социальная сеть для общения, публикаций и сообществ.">
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
   <style>
     :root {
       --bg: #070b16;
@@ -86,6 +87,14 @@
       box-shadow: 0 10px 25px rgba(74, 144, 217, .35);
     }
 
+    .logo-img {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        object-fit: cover;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
+    }
+
     .nav-links {
       display: flex;
       align-items: center;
@@ -103,8 +112,8 @@
     .nav-links a:hover { color: var(--text); }
 
     .hero {
-      padding: 96px 0 70px;
-      text-align: center;
+    padding: 48px 0 70px;
+    text-align: center;
     }
 
     .badge {
@@ -419,9 +428,9 @@
   <nav class="nav">
     <div class="container nav-inner">
       <div class="logo">
-        <div class="logo-mark">L</div>
+        <img src="favicon.png" alt="Логотип Lixwey" class="logo-img">
         Lixwey
-      </div>
+        </div>
       <div class="nav-links">
         <a href="#news">Новости</a>
         <a href="#download">Скачать</a>
@@ -432,9 +441,8 @@
   </nav>
 
   <header class="hero container">
-    <div class="badge reveal">Официальный сайт</div>
     <h1 class="reveal">
-      Социальная сеть <span class="gradient-text">нового поколения</span>
+        Социальная сеть <span class="gradient-text">нового поколения</span>
     </h1>
     <p class="reveal">
       Lixwey — пространство для общения, публикаций, сообществ и идей. Быстро, удобно и с вниманием к приватности.
