@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.lixwey.app",
+      "sha256_cert_fingerprints": [
+        "8A:3A:FD:60:75:E7:A0:8D:D5:08:D5:84:C0:44:39:AC:65:88:49:B7:78:9D:51:A1:2E:D3:8A:31:48:F2:EE:D3"
+      ]
+    }
+  }
+]
