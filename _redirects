@@ -1,2 +1,2 @@
-/reports    /reports.html    200
-/@*         https://api.lixwey.ru/:splat    301
+/reports /reports.html    200
+/@:username  https://api.lixwey.ru/@:username    301
