@@ -10,3 +10,4 @@ exact = "/reports"
 [rule.action.rewrite]
 target = "/reports.html"
 external = false
+if_no_file = false
