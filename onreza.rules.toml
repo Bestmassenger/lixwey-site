@@ -1,0 +1,12 @@
+schema = "EDGE_RULE_SET_V1"
+
+[[rule]]
+id = "reports-rewrite"
+name = "Serve reports.html for /reports"
+
+[rule.when.path]
+exact = "/reports"
+
+[rule.action.rewrite]
+target = "/reports.html"
+external = false
