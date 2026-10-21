@@ -83,9 +83,38 @@
         .consent-label a:hover {
             text-decoration: underline;
         }
-        /* Скрываем поле для своего типа, пока не выбран "Другое" */
         #custom-type-group {
             display: none;
+        }
+        
+        /* Стили для загрузки файлов */
+        .file-upload-wrapper {
+            margin-bottom: 16px;
+        }
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #fafafa;
+            color: #666;
+            transition: 0.2s;
+        }
+        .file-upload-label:hover {
+            border-color: #4A90D9;
+            background: #f0f7ff;
+            color: #4A90D9;
+        }
+        .file-upload-label input {
+            display: none;
+        }
+        .file-names {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #4A90D9;
         }
     </style>
 </head>
@@ -97,11 +126,8 @@
             <p class="subtitle">Опишите проблему или предложение. Мы обязательно рассмотрим.</p>
 
             <!-- Не забудь заменить ТВОЙ_КОД на реальный код из Formspree -->
-            <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" id="report-form">
+            <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" enctype="multipart/form-data" id="report-form">
                 
-                <label for="username">Ваш Username (никнейм)</label>
-                <input type="text" id="username" name="username" placeholder="@username или просто ник" required>
-
                 <label for="type">Тип обращения</label>
                 <select id="type" name="type" required onchange="toggleCustomType()">
                     <option value="bug">Баг</option>
@@ -110,23 +136,37 @@
                     <option value="other">Другое</option>
                 </select>
 
-                <!-- Поле для своего типа (появляется при выборе "Другое") -->
                 <div id="custom-type-group">
                     <label for="custom_type">Уточните тип обращения</label>
                     <input type="text" id="custom_type" name="custom_type" placeholder="Например: Проблема с оплатой">
                 </div>
 
+                <!-- Email теперь выше Username -->
                 <label for="email">Ваш email</label>
                 <input type="email" id="email" name="email" placeholder="you@example.com" required>
 
+                <!-- Username необязательный, ниже почты -->
+                <label for="username">Ваш Username (необязательно)</label>
+                <input type="text" id="username" name="username" placeholder="@username">
+
                 <label for="message">Сообщение</label>
                 <textarea id="message" name="message" placeholder="Опишите ситуацию..." required></textarea>
+
+                <!-- Блок загрузки изображений -->
+                <div class="file-upload-wrapper">
+                    <label>Прикрепить скриншоты (до 3 шт.)</label>
+                    <label for="images" class="file-upload-label">
+                        <span>Нажмите, чтобы выбрать файлы</span>
+                        <input type="file" id="images" name="images" accept="image/*" multiple onchange="handleFiles(this)">
+                    </label>
+                    <div class="file-names" id="file-names"></div>
+                </div>
 
                 <!-- ГАЛОЧКА СОГЛАСИЯ -->
                 <label class="consent-label">
                     <input type="checkbox" name="consent" required>
                     <span>
-                        Я согласен на обработку моих персональных данных (username, email и текст сообщения) 
+                        Я согласен на обработку моих персональных данных (email, username, текст сообщения и вложения) 
                         в соответствии с <a href="/privacy" target="_blank">Политикой конфиденциальности</a>.
                     </span>
                 </label>
@@ -148,6 +188,26 @@
             } else {
                 customGroup.style.display = 'none';
                 customInput.removeAttribute('required');
+            }
+        }
+
+        function handleFiles(input) {
+            const fileNamesDiv = document.getElementById('file-names');
+            
+            // Проверка на количество файлов
+            if (input.files.length > 3) {
+                alert("Можно прикрепить не более 3 изображений.");
+                input.value = ''; // Сбрасываем выбор
+                fileNamesDiv.textContent = '';
+                return;
+            }
+
+            fileNamesDiv.innerHTML = '';
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+                const span = document.createElement('div');
+                span.textContent = `📎 ${file.name}`;
+                fileNamesDiv.appendChild(span);
             }
         }
     </script>
