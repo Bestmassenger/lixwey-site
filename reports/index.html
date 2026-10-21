@@ -3,241 +3,165 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Обратная связь — Lixwey</title>
-  <meta
-    name="description"
-    content="Обратная связь Lixwey: сообщите об ошибке, предложите улучшение или отправьте жалобу."
-  >
-  <meta name="theme-color" content="#070b16">
-
-  <!-- Иконка во вкладке браузера -->
+  <meta name="description" content="Обратная связь Lixwey: сообщите об ошибке, предложите улучшение или отправьте жалобу.">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-
+  
   <style>
     :root {
-      color-scheme: dark;
-
       --bg: #070b16;
-      --surface: #101727;
+      --bg-soft: #0d1424;
+      --card: rgba(255, 255, 255, .06);
+      --border: rgba(255, 255, 255, .10);
       --text: #eef2ff;
-      --muted: #a4aec3;
-      --border: rgba(255, 255, 255, 0.11);
+      --muted: #9aa6bd;
       --accent: #4a90d9;
-      --accent-secondary: #7c5cff;
-      --danger: #ff9ca9;
-      --radius: 24px;
+      --accent-2: #7c5cff;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --radius: 20px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      min-height: 100vh;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      overflow-wrap: anywhere;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    button,
-    input,
-    textarea,
-    select {
-      font: inherit;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    button,
-    a,
-    input,
-    textarea,
-    select {
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    :focus-visible {
-      outline: 3px solid #a99aff;
-      outline-offset: 4px;
-    }
-
-    [hidden] {
-      display: none !important;
-    }
-
-    /* Фон */
-
+    /* Абсолютно такой же фон (Aurora), как на главной */
     .aurora {
       position: fixed;
       inset: 0;
       z-index: -1;
-      pointer-events: none;
       background:
-        radial-gradient(
-          ellipse at 10% 5%,
-          rgba(74, 144, 217, 0.22),
-          transparent 48%
-        ),
-        radial-gradient(
-          ellipse at 90% 20%,
-          rgba(124, 92, 255, 0.2),
-          transparent 48%
-        ),
-        radial-gradient(
-          ellipse at 50% 100%,
-          rgba(52, 211, 153, 0.07),
-          transparent 55%
-        );
+        radial-gradient(600px 400px at 15% 10%, rgba(74, 144, 217, .28), transparent 60%),
+        radial-gradient(700px 500px at 85% 15%, rgba(124, 92, 255, .22), transparent 65%),
+        radial-gradient(600px 500px at 50% 100%, rgba(52, 211, 153, .12), transparent 70%);
+      filter: blur(20px);
     }
 
     .container {
       width: min(1080px, calc(100% - 40px));
-      margin-inline: auto;
+      margin: 0 auto;
     }
 
-    /* Шапка */
-
-    .site-header {
+    /* Верхняя навигация 1-в-1 как на главной */
+    .nav {
       position: sticky;
       top: 0;
-      z-index: 20;
-      background: rgba(7, 11, 22, 0.86);
-      border-bottom: 1px solid var(--border);
-      -webkit-backdrop-filter: blur(18px);
+      z-index: 10;
       backdrop-filter: blur(18px);
+      background: rgba(7, 11, 22, .72);
+      border-bottom: 1px solid var(--border);
     }
 
-    .header-inner {
-      min-height: 76px;
+    .nav-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
+      padding: 16px 0;
     }
 
     .logo {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 12px;
-      text-decoration: none;
-      font-size: 21px;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      flex-shrink: 0;
+      font-size: 20px;
+      letter-spacing: -.02em;
+      text-decoration: none;
+      color: var(--text);
     }
 
-    .logo img {
-      display: block;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      object-fit: contain;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
     }
 
-    .back-link {
-      display: inline-flex;
+    .nav-links {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.04);
+      gap: 22px;
+    }
+
+    .nav-links a {
       color: var(--muted);
       text-decoration: none;
       font-size: 14px;
-      font-weight: 600;
-      transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease;
+      font-weight: 500;
+      transition: color .2s ease;
     }
 
-    .back-link:hover {
+    .nav-links a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 26px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      border: 1px solid transparent;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 16px 35px rgba(74, 144, 217, .28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 45px rgba(124, 92, 255, .35);
+    }
+
+    .btn-ghost {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, .06);
+      border-color: var(--border);
+      padding: 8px 16px; /* Чуть меньше для навигации */
+      border-radius: 10px;
+      font-size: 14px;
     }
 
-    .icon {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, .1);
+      transform: translateY(-2px);
     }
 
-    /* Заголовок страницы */
+    /* Стили для самой формы обратной связи */
+    .form-section {
+      padding: 40px 0 80px;
+      display: flex;
+      justify-content: center;
+    }
 
-    .page-intro {
+    .form-card {
+      width: 100%;
       max-width: 680px;
-      margin-inline: auto;
-      padding: 46px 0 28px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: clamp(32px, 5vw, 48px);
-      line-height: 1.15;
-      letter-spacing: -0.045em;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .gradient-text {
-      background: linear-gradient(
-        110deg,
-        #79bdff,
-        #b2a0ff
-      );
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .page-intro p {
-      max-width: 540px;
-      margin-inline: auto;
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    /* Карточка формы */
-
-    .form-wrapper {
-      max-width: 680px;
-      margin-inline: auto;
-      padding-bottom: 64px;
-    }
-
-    .card {
       padding: 32px;
-      border: 1px solid var(--border);
       border-radius: var(--radius);
-      background: linear-gradient(
-        155deg,
-        rgba(255, 255, 255, 0.075),
-        rgba(255, 255, 255, 0.03)
-      );
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
     }
 
     .form-heading {
@@ -249,64 +173,23 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .form-heading-icon {
-      width: 46px;
-      height: 46px;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      border: 1px solid rgba(124, 92, 255, 0.25);
-      border-radius: 14px;
-      background: linear-gradient(
-        135deg,
-        rgba(74, 144, 217, 0.18),
-        rgba(124, 92, 255, 0.18)
-      );
-      color: #b9b0ff;
-    }
-
-    .form-heading-icon .icon {
-      width: 23px;
-      height: 23px;
-    }
-
     .form-heading h2 {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: 21px;
+      letter-spacing: -.02em;
     }
-
     .form-heading p {
-      margin-top: 2px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .field {
-      min-width: 0;
-      margin-bottom: 20px;
-    }
-
-    .form-grid .field {
-      margin-bottom: 0;
-    }
-
-    .form-grid {
-      margin-bottom: 20px;
-    }
+    .field { margin-bottom: 20px; }
 
     .field-label {
       display: block;
       margin-bottom: 8px;
       font-size: 14px;
       font-weight: 600;
-      color: #e0e7f7;
+      color: var(--text);
     }
 
     .optional {
@@ -320,657 +203,290 @@
       width: 100%;
       min-height: 48px;
       padding: 12px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--border);
       border-radius: 12px;
       background: rgba(5, 9, 18, 0.4);
       color: var(--text);
-      font-size: 16px;
-      transition:
-        border-color 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .control::placeholder {
-      color: #78849d;
-      opacity: 1;
-    }
-
-    .control:hover {
-      border-color: rgba(255, 255, 255, 0.22);
-    }
-
+    .control::placeholder { color: #78849d; }
     .control:focus {
       outline: none;
-      border-color: #8e82ff;
+      border-color: var(--accent-2);
       background: rgba(5, 9, 18, 0.65);
       box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.16);
     }
 
-    select.control {
-      cursor: pointer;
-    }
+    select.control option { background: var(--bg-soft); color: var(--text); }
+    textarea.control { min-height: 140px; resize: vertical; }
 
-    select.control option {
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    textarea.control {
-      min-height: 160px;
-      resize: vertical;
-    }
-
-    .field-hint {
-      margin-top: 7px;
-      color: var(--muted);
-      font-size: 12px;
+    /* Сетка для email и username */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
     }
 
     /* Загрузка файлов */
-
-    .upload-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 6px 12px;
-      margin-bottom: 8px;
-    }
-
-    .upload-header .field-label {
-      margin-bottom: 0;
-    }
-
-    .file-counter {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
     .upload-zone {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      min-height: 138px;
+      min-height: 120px;
       padding: 22px 16px;
       border: 1px dashed rgba(158, 171, 204, 0.38);
       border-radius: 16px;
       background: rgba(74, 144, 217, 0.04);
       text-align: center;
       cursor: pointer;
-      transition:
-        border-color 0.2s ease,
-        background 0.2s ease;
+      transition: border-color 0.2s ease, background 0.2s ease;
     }
-
     .upload-zone:hover {
-      border-color: #9182ff;
+      border-color: var(--accent-2);
       background: rgba(124, 92, 255, 0.08);
     }
-
-    .file-input:focus-visible + .upload-zone {
-      outline: 3px solid #a99aff;
-      outline-offset: 4px;
-    }
-
     .upload-zone .icon {
-      width: 28px;
-      height: 28px;
-      margin-bottom: 4px;
-      color: #a69aff;
+      width: 28px; height: 28px; color: var(--accent-2);
     }
+    .upload-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .upload-description { font-size: 12px; color: var(--muted); }
+    .file-input { display: none; }
+    .file-counter { font-size: 12px; color: var(--muted); }
 
-    .upload-title {
-      color: #e0e7f7;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .upload-description {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
+    /* Превью картинок */
     .preview-container {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       margin-top: 14px;
     }
-
-    .preview-container:empty {
-      display: none;
-    }
-
+    .preview-container:empty { display: none; }
     .preview-item {
       position: relative;
-      width: 94px;
-      height: 94px;
+      width: 94px; height: 94px;
       border: 1px solid var(--border);
       border-radius: 14px;
-      background: var(--surface);
+      background: var(--bg-soft);
     }
-
     .preview-item img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border-radius: inherit;
-      object-fit: cover;
+      display: block; width: 100%; height: 100%;
+      border-radius: inherit; object-fit: cover;
     }
-
     .remove-btn {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      display: grid;
-      place-items: center;
-      width: 28px;
-      height: 28px;
-      padding: 0;
-      border: 2px solid #151b2b;
+      position: absolute; top: -6px; right: -6px;
+      display: grid; place-items: center;
+      width: 28px; height: 28px; padding: 0;
+      border: 2px solid var(--bg);
       border-radius: 50%;
-      background: #dd4965;
-      color: white;
-      font-size: 20px;
-      line-height: 1;
-      cursor: pointer;
-      transition: background 0.2s ease;
+      background: #dd4965; color: white;
+      font-size: 20px; line-height: 1; cursor: pointer;
     }
+    .remove-btn:hover { background: #bb3450; }
 
-    .remove-btn:hover {
-      background: #bb3450;
-    }
-
-    .file-error {
-      margin-top: 10px;
-      color: var(--danger);
-      font-size: 13px;
-    }
-
-    /* Согласие */
-
+    /* Галочка согласия */
     .consent-label {
       display: flex;
       align-items: flex-start;
       gap: 12px;
       margin: 24px 0;
       color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
+      font-size: 13px;
+      line-height: 1.6;
       cursor: pointer;
     }
-
     .consent-label input {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      flex-shrink: 0;
-      accent-color: #8e77ff;
-      cursor: pointer;
+      width: 18px; height: 18px; margin-top: 2px;
+      flex-shrink: 0; accent-color: var(--accent-2); cursor: pointer;
     }
-
     .consent-label a {
-      color: #b6abff;
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px;
     }
+    .consent-label a:hover { color: #a99aff; }
 
-    .consent-label a:hover {
-      color: #d1caff;
-    }
-
-    /* Отправка */
-
+    /* Кнопка отправки */
     .submit-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
       width: 100%;
       min-height: 52px;
-      padding: 14px 20px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(
-        135deg,
-        var(--accent),
-        var(--accent-secondary)
-      );
-      color: white;
       font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 12px 30px rgba(94, 97, 224, 0.22);
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+      margin-top: 10px;
     }
 
-    .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 36px rgba(94, 97, 224, 0.32);
-    }
-
-    .submit-btn:active {
-      transform: translateY(0);
-    }
-
-    .privacy-note {
-      margin-top: 16px;
-      color: var(--muted);
-      text-align: center;
-      font-size: 12px;
-    }
-
-    /* Подвал */
-
-    .site-footer {
-      padding: 24px 0 32px;
+    /* Подвал 1-в-1 как на главной */
+    footer {
       border-top: 1px solid var(--border);
+      padding: 30px 0 40px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
     }
-
     .footer-inner {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      gap: 16px;
     }
-
     .footer-links {
       display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
+      gap: 20px;
     }
-
     .footer-links a {
       color: var(--muted);
       text-decoration: none;
     }
+    .footer-links a:hover { color: var(--text); }
 
-    .footer-links a:hover {
-      color: var(--text);
+    /* Мобильная адаптация */
+    @media (max-width: 900px) {
+      .nav-links a:not(.btn) { display: none; }
     }
-
-    /* Появление страницы */
-
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .page-intro,
-    .card {
-      animation: appear 0.45s ease both;
-    }
-
-    .card {
-      animation-delay: 0.08s;
-    }
-
-    /* Мобильная версия */
-
     @media (max-width: 600px) {
-      .container {
-        width: calc(100% - 28px);
-      }
-
-      .header-inner {
-        min-height: 68px;
-        gap: 12px;
-      }
-
-      .logo {
-        gap: 9px;
-        font-size: 20px;
-      }
-
-      .logo img {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-      }
-
-      .back-link {
-        padding: 9px 12px;
-        font-size: 13px;
-      }
-
-      .page-intro {
-        padding: 34px 4px 24px;
-      }
-
-      .page-intro p {
-        font-size: 14px;
-      }
-
-      .card {
-        padding: 22px 18px;
-        border-radius: 20px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .form-wrapper {
-        padding-bottom: 40px;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .footer-links {
-        justify-content: center;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-      }
+      .container { width: calc(100% - 28px); }
+      .nav-inner { padding: 12px 0; }
+      .form-card { padding: 22px 18px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
-
 <body>
-  <div class="aurora" aria-hidden="true"></div>
+  <!-- Тот же фон -->
+  <div class="aurora"></div>
 
-  <!-- Шапка с логотипом -->
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="index.html" class="logo" aria-label="Lixwey — на главную">
-        <img
-          src="favicon.png"
-          alt=""
-          width="40"
-          height="40"
-        >
-        <span>Lixwey</span>
+  <!-- Та же верхняя панель -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <img src="favicon.png" alt="Логотип Lixwey" class="logo-img">
+        Lixwey
       </a>
-
-      <a href="index.html" class="back-link">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m12 5-7 7 7 7"></path>
-          <path d="M5 12h14"></path>
-        </svg>
-        <span>На главную</span>
-      </a>
+      <div class="nav-links">
+        <a href="index.html#news">Новости</a>
+        <a href="index.html#download">Скачать</a>
+        <a href="index.html#status">Статус</a>
+        <!-- Кнопка указывает на текущую страницу -->
+        <a href="reports.html" class="btn btn-ghost" style="border-color: var(--accent); color: var(--accent);">Обратная связь</a>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <main class="container">
-    <section class="page-intro" aria-labelledby="page-title">
-      <h1 id="page-title">
-        Обратная <span class="gradient-text">связь</span>
-      </h1>
+  <!-- Форма -->
+  <main class="container form-section">
+    <section class="form-card">
+      <div class="form-heading">
+        <div>
+          <h2>Новое обращение</h2>
+          <p>Поля без пометки «необязательно» обязательны.</p>
+        </div>
+      </div>
 
-      <p>
-        Нашли ошибку или придумали улучшение?
-        Расскажите нам — помогите сделать Lixwey лучше.
-      </p>
-    </section>
+      <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" enctype="multipart/form-data" id="report-form">
+        
+        <div class="field">
+          <label for="type" class="field-label">Тип обращения</label>
+          <select id="type" name="type" class="control" required>
+            <option value="bug">Ошибка в приложении</option>
+            <option value="suggestion">Предложение по улучшению</option>
+            <option value="abuse">Жалоба на пользователя</option>
+            <option value="other">Другое</option>
+          </select>
+        </div>
 
-    <div class="form-wrapper">
-      <section class="card" aria-labelledby="form-title">
-        <div class="form-heading">
-          <div class="form-heading-icon" aria-hidden="true">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"></path>
-            </svg>
+        <div class="field" id="custom-type-group" hidden>
+          <label for="custom_type" class="field-label">Уточните тип обращения</label>
+          <input type="text" id="custom_type" name="custom_type" class="control" placeholder="Кратко укажите тему обращения" maxlength="150" disabled>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="email" class="field-label">Ваш email</label>
+            <input type="email" id="email" name="email" class="control" placeholder="you@example.com" autocomplete="email" required>
           </div>
 
-          <div>
-            <h2 id="form-title">Новое обращение</h2>
-            <p>Поля без пометки «необязательно» обязательны.</p>
+          <div class="field">
+            <label for="username" class="field-label">
+              Username <span class="optional">— необязательно</span>
+            </label>
+            <input type="text" id="username" name="username" class="control" placeholder="@username" autocapitalize="none" spellcheck="false" maxlength="64">
           </div>
         </div>
 
-        <!-- Замените ТВОЙ_КОД на идентификатор своей формы -->
-        <form
-          action="https://formspree.io/f/ТВОЙ_КОД"
-          method="POST"
-          enctype="multipart/form-data"
-          id="report-form"
-        >
-          <div class="field">
-            <label for="type" class="field-label">
-              Тип обращения
-            </label>
+        <div class="field">
+          <label for="message" class="field-label">Сообщение</label>
+          <textarea id="message" name="message" class="control" placeholder="Расскажите, что произошло или что вы хотите улучшить..." maxlength="10000" required></textarea>
+        </div>
 
-            <select id="type" name="type" class="control" required>
-              <option value="bug">Ошибка в приложении</option>
-              <option value="suggestion">Предложение по улучшению</option>
-              <option value="abuse">Жалоба на пользователя</option>
-              <option value="other">Другое</option>
-            </select>
+        <div class="field">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span class="field-label" id="images-label">Скриншоты <span class="optional">— необязательно</span></span>
+            <span class="file-counter" id="file-counter">0 из 3</span>
           </div>
 
-          <div class="field" id="custom-type-group" hidden>
-            <label for="custom_type" class="field-label">
-              Уточните тип обращения
-            </label>
-
-            <input
-              type="text"
-              id="custom_type"
-              name="custom_type"
-              class="control"
-              placeholder="Кратко укажите тему обращения"
-              maxlength="150"
-              disabled
-            >
-          </div>
-
-          <div class="form-grid">
-            <div class="field">
-              <label for="email" class="field-label">
-                Ваш email
-              </label>
-
-              <input
-                type="email"
-                id="email"
-                name="email"
-                class="control"
-                placeholder="you@example.com"
-                autocomplete="email"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="username" class="field-label">
-                Username
-                <span class="optional">— необязательно</span>
-              </label>
-
-              <input
-                type="text"
-                id="username"
-                name="username"
-                class="control"
-                placeholder="@username"
-                autocapitalize="none"
-                spellcheck="false"
-                maxlength="64"
-              >
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="message" class="field-label">
-              Сообщение
-            </label>
-
-            <textarea
-              id="message"
-              name="message"
-              class="control"
-              placeholder="Расскажите, что произошло или что вы хотите улучшить..."
-              aria-describedby="message-hint"
-              maxlength="10000"
-              required
-            ></textarea>
-
-            <p class="field-hint" id="message-hint">
-              Для ошибки укажите модель устройства, версию приложения
-              и действия, после которых возникла проблема.
-            </p>
-          </div>
-
-          <div class="field">
-            <div class="upload-header">
-              <span class="field-label" id="images-label">
-                Скриншоты
-                <span class="optional">— необязательно</span>
-              </span>
-
-              <span class="file-counter" id="file-counter" aria-live="polite">
-                0 из 3
-              </span>
-            </div>
-
-            <input
-              type="file"
-              id="images"
-              name="images"
-              class="file-input visually-hidden"
-              accept="image/jpeg,image/png,image/webp"
-              aria-labelledby="images-label"
-              aria-describedby="upload-description file-error"
-              multiple
-            >
-
-            <label for="images" class="upload-zone">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 16V4"></path>
-                <path d="m7 9 5-5 5 5"></path>
-                <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"></path>
-              </svg>
-
-              <span class="upload-title">
-                Выбрать изображения
-              </span>
-
-              <span class="upload-description" id="upload-description">
-                JPG, PNG или WebP · до 3 файлов · до 5 МБ каждый
-              </span>
-            </label>
-
-            <p class="file-error" id="file-error" role="alert" hidden></p>
-
-            <div
-              class="preview-container"
-              id="preview-container"
-              aria-label="Прикреплённые изображения"
-            ></div>
-          </div>
-
-          <label class="consent-label">
-            <input
-              type="checkbox"
-              name="consent"
-              value="accepted"
-              required
-            >
-
-            <span>
-              Я согласен на обработку моих персональных данных
-              (email, username, текста сообщения и вложений)
-              в соответствии с
-              <a href="/privacy" target="_blank" rel="noopener noreferrer">
-                Политикой конфиденциальности
-              </a>.
-            </span>
+          <input type="file" id="images" name="images" class="file-input" accept="image/jpeg,image/png,image/webp" multiple>
+          
+          <label for="images" class="upload-zone">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 16V4"></path>
+              <path d="m7 9 5-5 5 5"></path>
+              <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"></path>
+            </svg>
+            <span class="upload-title">Выбрать изображения</span>
+            <span class="upload-description">JPG, PNG или WebP · до 3 файлов · до 5 МБ каждый</span>
           </label>
 
-          <button type="submit" class="submit-btn">
-            <span>Отправить обращение</span>
+          <div class="preview-container" id="preview-container"></div>
+        </div>
 
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m22 2-7 20-4-9-9-4 20-7Z"></path>
-              <path d="M22 2 11 13"></path>
-            </svg>
-          </button>
+        <label class="consent-label">
+          <input type="checkbox" name="consent" value="accepted" required>
+          <span>
+            Я согласен на обработку моих персональных данных (email, username, текста сообщения и вложений) в соответствии с 
+            <a href="/privacy" target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a>.
+          </span>
+        </label>
 
-          <p class="privacy-note">
-            Не отправляйте пароли, коды входа и другие секретные данные.
-          </p>
-        </form>
-      </section>
-    </div>
+        <button type="submit" class="btn btn-primary submit-btn">
+          <span>Отправить обращение</span>
+        </button>
+      </form>
+    </section>
   </main>
 
-  <footer class="site-footer">
+  <!-- Тот же подвал -->
+  <footer>
     <div class="container footer-inner">
       <span>© 2026 Lixwey. Все права защищены.</span>
-
       <div class="footer-links">
-        <a href="index.html">Главная</a>
-        <a href="/privacy">Конфиденциальность</a>
+        <a href="reports.html">Поддержка</a>
+        <a href="index.html#status">Статус</a>
+        <a href="index.html#download">Приложение</a>
       </div>
     </div>
   </footer>
 
+  <!-- Скрипт для работы превью и кастомного типа обращения -->
   <script>
     const form = document.getElementById("report-form");
-
     const typeSelect = document.getElementById("type");
     const customGroup = document.getElementById("custom-type-group");
     const customInput = document.getElementById("custom_type");
-
     const fileInput = document.getElementById("images");
     const previewContainer = document.getElementById("preview-container");
     const fileCounter = document.getElementById("file-counter");
-    const fileError = document.getElementById("file-error");
 
     const MAX_FILES = 3;
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-    const ALLOWED_TYPES = new Set([
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ]);
+    const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
     let selectedFiles = [];
     let previewUrls = [];
 
-    // Дополнительное поле для типа «Другое».
     function toggleCustomType() {
       const isOther = typeSelect.value === "other";
-
       customGroup.hidden = !isOther;
       customInput.required = isOther;
       customInput.disabled = !isOther;
@@ -979,20 +495,6 @@
     typeSelect.addEventListener("change", toggleCustomType);
     toggleCustomType();
 
-    function showFileError(message = "") {
-      fileError.textContent = message;
-      fileError.hidden = !message;
-    }
-
-    function isDuplicate(file, files) {
-      return files.some(existing =>
-        existing.name === file.name &&
-        existing.size === file.size &&
-        existing.lastModified === file.lastModified
-      );
-    }
-
-    // Освобождаем URL старых превью перед пересозданием.
     function releasePreviewUrls() {
       previewUrls.forEach(url => URL.revokeObjectURL(url));
       previewUrls = [];
@@ -1001,45 +503,24 @@
     function renderPreviews() {
       releasePreviewUrls();
       previewContainer.replaceChildren();
-
       fileCounter.textContent = `${selectedFiles.length} из ${MAX_FILES}`;
 
       selectedFiles.forEach((file, index) => {
         const item = document.createElement("div");
         item.className = "preview-item";
-
         const image = document.createElement("img");
         const url = URL.createObjectURL(file);
-
         previewUrls.push(url);
-
+        
         image.src = url;
-        image.alt = `Прикреплённый скриншот: ${file.name}`;
-
+        
         const removeButton = document.createElement("button");
         removeButton.type = "button";
         removeButton.className = "remove-btn";
         removeButton.textContent = "×";
-        removeButton.setAttribute(
-          "aria-label",
-          `Удалить изображение ${file.name}`
-        );
-
         removeButton.addEventListener("click", () => {
           selectedFiles.splice(index, 1);
-          showFileError();
           renderPreviews();
-
-          const remainingButtons =
-            previewContainer.querySelectorAll(".remove-btn");
-
-          if (remainingButtons.length) {
-            remainingButtons[
-              Math.min(index, remainingButtons.length - 1)
-            ].focus();
-          } else {
-            fileInput.focus();
-          }
         });
 
         item.append(image, removeButton);
@@ -1049,46 +530,21 @@
 
     fileInput.addEventListener("change", () => {
       const incomingFiles = Array.from(fileInput.files || []);
-      const errors = [];
-
+      
       incomingFiles.forEach(file => {
-        if (!ALLOWED_TYPES.has(file.type)) {
-          errors.push(
-            `«${file.name}»: выберите изображение JPG, PNG или WebP.`
-          );
-          return;
-        }
-
-        if (file.size > MAX_FILE_SIZE) {
-          errors.push(`«${file.name}»: размер превышает 5 МБ.`);
-          return;
-        }
-
-        if (isDuplicate(file, selectedFiles)) {
-          return;
-        }
-
-        if (selectedFiles.length >= MAX_FILES) {
-          errors.push("Можно прикрепить не более 3 изображений.");
-          return;
-        }
-
+        if (!ALLOWED_TYPES.has(file.type)) return;
+        if (file.size > MAX_FILE_SIZE) return;
+        if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) return;
+        if (selectedFiles.length >= MAX_FILES) return;
         selectedFiles.push(file);
       });
 
-      // Файлы храним отдельно, чтобы можно было добавлять их порциями.
-      fileInput.value = "";
-
-      showFileError([...new Set(errors)].join(" "));
+      fileInput.value = ""; // Очищаем input для возможности повторного выбора
       renderPreviews();
     });
 
-    // Добавляем выбранные файлы в стандартную отправку формы.
-    // Используется отдельный список, поэтому удалённые превью
-    // не попадут в отправляемое обращение.
     form.addEventListener("formdata", event => {
       event.formData.delete("images");
-
       selectedFiles.forEach(file => {
         event.formData.append("images", file, file.name);
       });
