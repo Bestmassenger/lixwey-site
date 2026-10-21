@@ -62,6 +62,31 @@
             color: #4A90D9;
             text-decoration: none;
         }
+        .consent-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-weight: normal;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .consent-label input {
+            width: auto;
+            margin-top: 3px;
+            cursor: pointer;
+        }
+        .consent-label a {
+            color: #4A90D9;
+            text-decoration: none;
+        }
+        .consent-label a:hover {
+            text-decoration: underline;
+        }
+        /* Скрываем поле для своего типа, пока не выбран "Другое" */
+        #custom-type-group {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -71,14 +96,25 @@
             <h1>Обратная связь</h1>
             <p class="subtitle">Опишите проблему или предложение. Мы обязательно рассмотрим.</p>
 
-            <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST">
+            <!-- Не забудь заменить ТВОЙ_КОД на реальный код из Formspree -->
+            <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" id="report-form">
+                
+                <label for="username">Ваш Username (никнейм)</label>
+                <input type="text" id="username" name="username" placeholder="@username или просто ник" required>
+
                 <label for="type">Тип обращения</label>
-                <select id="type" name="type" required>
+                <select id="type" name="type" required onchange="toggleCustomType()">
                     <option value="bug">Баг</option>
                     <option value="suggestion">Предложение</option>
                     <option value="abuse">Жалоба на пользователя</option>
                     <option value="other">Другое</option>
                 </select>
+
+                <!-- Поле для своего типа (появляется при выборе "Другое") -->
+                <div id="custom-type-group">
+                    <label for="custom_type">Уточните тип обращения</label>
+                    <input type="text" id="custom_type" name="custom_type" placeholder="Например: Проблема с оплатой">
+                </div>
 
                 <label for="email">Ваш email</label>
                 <input type="email" id="email" name="email" placeholder="you@example.com" required>
@@ -86,9 +122,34 @@
                 <label for="message">Сообщение</label>
                 <textarea id="message" name="message" placeholder="Опишите ситуацию..." required></textarea>
 
+                <!-- ГАЛОЧКА СОГЛАСИЯ -->
+                <label class="consent-label">
+                    <input type="checkbox" name="consent" required>
+                    <span>
+                        Я согласен на обработку моих персональных данных (username, email и текст сообщения) 
+                        в соответствии с <a href="/privacy" target="_blank">Политикой конфиденциальности</a>.
+                    </span>
+                </label>
+
                 <button type="submit">Отправить</button>
             </form>
         </div>
     </div>
+
+    <script>
+        function toggleCustomType() {
+            const typeSelect = document.getElementById('type');
+            const customGroup = document.getElementById('custom-type-group');
+            const customInput = document.getElementById('custom_type');
+
+            if (typeSelect.value === 'other') {
+                customGroup.style.display = 'block';
+                customInput.setAttribute('required', 'required');
+            } else {
+                customGroup.style.display = 'none';
+                customInput.removeAttribute('required');
+            }
+        }
+    </script>
 </body>
 </html>
