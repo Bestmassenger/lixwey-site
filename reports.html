@@ -1,215 +1,554 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Обратная связь — Lixwey</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial;
-            background: #f5f7fa;
-            color: #333;
-            padding: 20px;
-        }
-        .container { max-width: 600px; margin: 0 auto; }
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        h1 { color: #1456A0; margin-bottom: 8px; }
-        .subtitle { color: #888; margin-bottom: 24px; font-size: 14px; }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            margin-bottom: 16px;
-            background: #fafafa;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #4A90D9;
-            background: white;
-        }
-        textarea { resize: vertical; min-height: 120px; }
-        button {
-            width: 100%;
-            padding: 14px;
-            background: #4A90D9;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover { background: #1456A0; }
-        .back {
-            display: inline-block;
-            margin-bottom: 16px;
-            color: #4A90D9;
-            text-decoration: none;
-        }
-        .consent-label {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-weight: normal;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .consent-label input {
-            width: auto;
-            margin-top: 3px;
-            cursor: pointer;
-        }
-        .consent-label a {
-            color: #4A90D9;
-            text-decoration: none;
-        }
-        .consent-label a:hover {
-            text-decoration: underline;
-        }
-        #custom-type-group {
-            display: none;
-        }
-        
-        /* Стили для загрузки файлов */
-        .file-upload-wrapper {
-            margin-bottom: 16px;
-        }
-        .file-upload-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            cursor: pointer;
-            background: #fafafa;
-            color: #666;
-            transition: 0.2s;
-        }
-        .file-upload-label:hover {
-            border-color: #4A90D9;
-            background: #f0f7ff;
-            color: #4A90D9;
-        }
-        .file-upload-label input {
-            display: none;
-        }
-        .file-names {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #4A90D9;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Обратная связь — Lixwey</title>
+  <meta name="description" content="Обратная связь Lixwey: сообщите об ошибке, предложите улучшение или отправьте жалобу.">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  
+  <style>
+    :root {
+      --bg: #070b16;
+      --bg-soft: #0d1424;
+      --card: rgba(255, 255, 255, .06);
+      --border: rgba(255, 255, 255, .10);
+      --text: #eef2ff;
+      --muted: #9aa6bd;
+      --accent: #4a90d9;
+      --accent-2: #7c5cff;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --radius: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Абсолютно такой же фон (Aurora), как на главной */
+    .aurora {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(600px 400px at 15% 10%, rgba(74, 144, 217, .28), transparent 60%),
+        radial-gradient(700px 500px at 85% 15%, rgba(124, 92, 255, .22), transparent 65%),
+        radial-gradient(600px 500px at 50% 100%, rgba(52, 211, 153, .12), transparent 70%);
+      filter: blur(20px);
+    }
+
+    .container {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    /* Верхняя навигация 1-в-1 как на главной */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(7, 11, 22, .72);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -.02em;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color .2s ease;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 26px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      border: 1px solid transparent;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 16px 35px rgba(74, 144, 217, .28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 45px rgba(124, 92, 255, .35);
+    }
+
+    .btn-ghost {
+      color: var(--text);
+      background: rgba(255, 255, 255, .06);
+      border-color: var(--border);
+      padding: 8px 16px; /* Чуть меньше для навигации */
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, .1);
+      transform: translateY(-2px);
+    }
+
+    /* Стили для самой формы обратной связи */
+    .form-section {
+      padding: 40px 0 80px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-card {
+      width: 100%;
+      max-width: 680px;
+      padding: 32px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+
+    .form-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 26px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-heading h2 {
+      font-size: 21px;
+      letter-spacing: -.02em;
+    }
+    .form-heading p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .field { margin-bottom: 20px; }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .optional {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .control {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(5, 9, 18, 0.4);
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .control::placeholder { color: #78849d; }
+    .control:focus {
+      outline: none;
+      border-color: var(--accent-2);
+      background: rgba(5, 9, 18, 0.65);
+      box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.16);
+    }
+
+    select.control option { background: var(--bg-soft); color: var(--text); }
+    textarea.control { min-height: 140px; resize: vertical; }
+
+    /* Сетка для email и username */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    /* Загрузка файлов */
+    .upload-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 120px;
+      padding: 22px 16px;
+      border: 1px dashed rgba(158, 171, 204, 0.38);
+      border-radius: 16px;
+      background: rgba(74, 144, 217, 0.04);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .upload-zone:hover {
+      border-color: var(--accent-2);
+      background: rgba(124, 92, 255, 0.08);
+    }
+    .upload-zone .icon {
+      width: 28px; height: 28px; color: var(--accent-2);
+    }
+    .upload-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .upload-description { font-size: 12px; color: var(--muted); }
+    .file-input { display: none; }
+    .file-counter { font-size: 12px; color: var(--muted); }
+
+    /* Превью картинок */
+    .preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .preview-container:empty { display: none; }
+    .preview-item {
+      position: relative;
+      width: 94px; height: 94px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg-soft);
+    }
+    .preview-item img {
+      display: block; width: 100%; height: 100%;
+      border-radius: inherit; object-fit: cover;
+    }
+    .remove-btn {
+      position: absolute; top: -6px; right: -6px;
+      display: grid; place-items: center;
+      width: 28px; height: 28px; padding: 0;
+      border: 2px solid var(--bg);
+      border-radius: 50%;
+      background: #dd4965; color: white;
+      font-size: 20px; line-height: 1; cursor: pointer;
+    }
+    .remove-btn:hover { background: #bb3450; }
+
+    /* Галочка согласия */
+    .consent-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 24px 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      cursor: pointer;
+    }
+    .consent-label input {
+      width: 18px; height: 18px; margin-top: 2px;
+      flex-shrink: 0; accent-color: var(--accent-2); cursor: pointer;
+    }
+    .consent-label a {
+      color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px;
+    }
+    .consent-label a:hover { color: #a99aff; }
+
+    /* Кнопка отправки */
+    .submit-btn {
+      width: 100%;
+      min-height: 52px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    /* Подвал 1-в-1 как на главной */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* Мобильная адаптация */
+    @media (max-width: 900px) {
+      .nav-links a:not(.btn) { display: none; }
+    }
+    @media (max-width: 600px) {
+      .container { width: calc(100% - 28px); }
+      .nav-inner { padding: 12px 0; }
+      .form-card { padding: 22px 18px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <a href="index.html" class="back">← На главную</a>
-        <div class="card">
-            <h1>Обратная связь</h1>
-            <p class="subtitle">Опишите проблему или предложение. Мы обязательно рассмотрим.</p>
+  <!-- Тот же фон -->
+  <div class="aurora"></div>
 
-            <!-- Не забудь заменить ТВОЙ_КОД на реальный код из Formspree -->
-            <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" enctype="multipart/form-data" id="report-form">
-                
-                <label for="type">Тип обращения</label>
-                <select id="type" name="type" required onchange="toggleCustomType()">
-                    <option value="bug">Баг</option>
-                    <option value="suggestion">Предложение</option>
-                    <option value="abuse">Жалоба на пользователя</option>
-                    <option value="other">Другое</option>
-                </select>
-
-                <div id="custom-type-group">
-                    <label for="custom_type">Уточните тип обращения</label>
-                    <input type="text" id="custom_type" name="custom_type" placeholder="Например: Проблема с оплатой">
-                </div>
-
-                <!-- Email теперь выше Username -->
-                <label for="email">Ваш email</label>
-                <input type="email" id="email" name="email" placeholder="you@example.com" required>
-
-                <!-- Username необязательный, ниже почты -->
-                <label for="username">Ваш Username (необязательно)</label>
-                <input type="text" id="username" name="username" placeholder="@username">
-
-                <label for="message">Сообщение</label>
-                <textarea id="message" name="message" placeholder="Опишите ситуацию..." required></textarea>
-
-                <!-- Блок загрузки изображений -->
-                <div class="file-upload-wrapper">
-                    <label>Прикрепить скриншоты (до 3 шт.)</label>
-                    <label for="images" class="file-upload-label">
-                        <span>Нажмите, чтобы выбрать файлы</span>
-                        <input type="file" id="images" name="images" accept="image/*" multiple onchange="handleFiles(this)">
-                    </label>
-                    <div class="file-names" id="file-names"></div>
-                </div>
-
-                <!-- ГАЛОЧКА СОГЛАСИЯ -->
-                <label class="consent-label">
-                    <input type="checkbox" name="consent" required>
-                    <span>
-                        Я согласен на обработку моих персональных данных (email, username, текст сообщения и вложения) 
-                        в соответствии с <a href="/privacy" target="_blank">Политикой конфиденциальности</a>.
-                    </span>
-                </label>
-
-                <button type="submit">Отправить</button>
-            </form>
-        </div>
+  <!-- Та же верхняя панель -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <img src="favicon.png" alt="Логотип Lixwey" class="logo-img">
+        Lixwey
+      </a>
+      <div class="nav-links">
+        <a href="index.html#news">Новости</a>
+        <a href="index.html#download">Скачать</a>
+        <a href="index.html#status">Статус</a>
+        <!-- Кнопка указывает на текущую страницу -->
+        <a href="reports.html" class="btn btn-ghost" style="border-color: var(--accent); color: var(--accent);">Обратная связь</a>
+      </div>
     </div>
+  </nav>
 
-    <script>
-        function toggleCustomType() {
-            const typeSelect = document.getElementById('type');
-            const customGroup = document.getElementById('custom-type-group');
-            const customInput = document.getElementById('custom_type');
+  <!-- Форма -->
+  <main class="container form-section">
+    <section class="form-card">
+      <div class="form-heading">
+        <div>
+          <h2>Новое обращение</h2>
+          <p>Поля без пометки «необязательно» обязательны.</p>
+        </div>
+      </div>
 
-            if (typeSelect.value === 'other') {
-                customGroup.style.display = 'block';
-                customInput.setAttribute('required', 'required');
-            } else {
-                customGroup.style.display = 'none';
-                customInput.removeAttribute('required');
-            }
-        }
+      <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" enctype="multipart/form-data" id="report-form">
+        
+        <div class="field">
+          <label for="type" class="field-label">Тип обращения</label>
+          <select id="type" name="type" class="control" required>
+            <option value="bug">Ошибка в приложении</option>
+            <option value="suggestion">Предложение по улучшению</option>
+            <option value="abuse">Жалоба на пользователя</option>
+            <option value="other">Другое</option>
+          </select>
+        </div>
 
-        function handleFiles(input) {
-            const fileNamesDiv = document.getElementById('file-names');
-            
-            // Проверка на количество файлов
-            if (input.files.length > 3) {
-                alert("Можно прикрепить не более 3 изображений.");
-                input.value = ''; // Сбрасываем выбор
-                fileNamesDiv.textContent = '';
-                return;
-            }
+        <div class="field" id="custom-type-group" hidden>
+          <label for="custom_type" class="field-label">Уточните тип обращения</label>
+          <input type="text" id="custom_type" name="custom_type" class="control" placeholder="Кратко укажите тему обращения" maxlength="150" disabled>
+        </div>
 
-            fileNamesDiv.innerHTML = '';
-            for (let i = 0; i < input.files.length; i++) {
-                const file = input.files[i];
-                const span = document.createElement('div');
-                span.textContent = `📎 ${file.name}`;
-                fileNamesDiv.appendChild(span);
-            }
-        }
-    </script>
+        <div class="form-grid">
+          <div class="field">
+            <label for="email" class="field-label">Ваш email</label>
+            <input type="email" id="email" name="email" class="control" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="username" class="field-label">
+              Username <span class="optional">— необязательно</span>
+            </label>
+            <input type="text" id="username" name="username" class="control" placeholder="@username" autocapitalize="none" spellcheck="false" maxlength="64">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="message" class="field-label">Сообщение</label>
+          <textarea id="message" name="message" class="control" placeholder="Расскажите, что произошло или что вы хотите улучшить..." maxlength="10000" required></textarea>
+        </div>
+
+        <div class="field">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span class="field-label" id="images-label">Скриншоты <span class="optional">— необязательно</span></span>
+            <span class="file-counter" id="file-counter">0 из 3</span>
+          </div>
+
+          <input type="file" id="images" name="images" class="file-input" accept="image/jpeg,image/png,image/webp" multiple>
+          
+          <label for="images" class="upload-zone">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 16V4"></path>
+              <path d="m7 9 5-5 5 5"></path>
+              <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"></path>
+            </svg>
+            <span class="upload-title">Выбрать изображения</span>
+            <span class="upload-description">JPG, PNG или WebP · до 3 файлов · до 5 МБ каждый</span>
+          </label>
+
+          <div class="preview-container" id="preview-container"></div>
+        </div>
+
+        <label class="consent-label">
+          <input type="checkbox" name="consent" value="accepted" required>
+          <span>
+            Я согласен на обработку моих персональных данных (email, username, текста сообщения и вложений) в соответствии с 
+            <a href="/privacy" target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a>.
+          </span>
+        </label>
+
+        <button type="submit" class="btn btn-primary submit-btn">
+          <span>Отправить обращение</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Тот же подвал -->
+  <footer>
+    <div class="container footer-inner">
+      <span>© 2026 Lixwey. Все права защищены.</span>
+      <div class="footer-links">
+        <a href="reports.html">Поддержка</a>
+        <a href="index.html#status">Статус</a>
+        <a href="index.html#download">Приложение</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Скрипт для работы превью и кастомного типа обращения -->
+  <script>
+    const form = document.getElementById("report-form");
+    const typeSelect = document.getElementById("type");
+    const customGroup = document.getElementById("custom-type-group");
+    const customInput = document.getElementById("custom_type");
+    const fileInput = document.getElementById("images");
+    const previewContainer = document.getElementById("preview-container");
+    const fileCounter = document.getElementById("file-counter");
+
+    const MAX_FILES = 3;
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+    let selectedFiles = [];
+    let previewUrls = [];
+
+    function toggleCustomType() {
+      const isOther = typeSelect.value === "other";
+      customGroup.hidden = !isOther;
+      customInput.required = isOther;
+      customInput.disabled = !isOther;
+    }
+
+    typeSelect.addEventListener("change", toggleCustomType);
+    toggleCustomType();
+
+    function releasePreviewUrls() {
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
+      previewUrls = [];
+    }
+
+    function renderPreviews() {
+      releasePreviewUrls();
+      previewContainer.replaceChildren();
+      fileCounter.textContent = `${selectedFiles.length} из ${MAX_FILES}`;
+
+      selectedFiles.forEach((file, index) => {
+        const item = document.createElement("div");
+        item.className = "preview-item";
+        const image = document.createElement("img");
+        const url = URL.createObjectURL(file);
+        previewUrls.push(url);
+        
+        image.src = url;
+        
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "remove-btn";
+        removeButton.textContent = "×";
+        removeButton.addEventListener("click", () => {
+          selectedFiles.splice(index, 1);
+          renderPreviews();
+        });
+
+        item.append(image, removeButton);
+        previewContainer.appendChild(item);
+      });
+    }
+
+    fileInput.addEventListener("change", () => {
+      const incomingFiles = Array.from(fileInput.files || []);
+      
+      incomingFiles.forEach(file => {
+        if (!ALLOWED_TYPES.has(file.type)) return;
+        if (file.size > MAX_FILE_SIZE) return;
+        if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) return;
+        if (selectedFiles.length >= MAX_FILES) return;
+        selectedFiles.push(file);
+      });
+
+      fileInput.value = ""; // Очищаем input для возможности повторного выбора
+      renderPreviews();
+    });
+
+    form.addEventListener("formdata", event => {
+      event.formData.delete("images");
+      selectedFiles.forEach(file => {
+        event.formData.append("images", file, file.name);
+      });
+    });
+  </script>
 </body>
 </html>
