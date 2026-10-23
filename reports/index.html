@@ -214,7 +214,7 @@
         </div>
 
         <label class="consent-label">
-          <input type="checkbox" name="consent" value="accepted" required>
+          <input type="checkbox" name="consent" value="true" required>
           <span>
             Я согласен на обработку моих персональных данных (email, username, текста сообщения и вложений) в соответствии с 
             <a href="../privacy/" target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a>.
@@ -242,7 +242,7 @@
 
   <script>
     const form = document.getElementById("report-form");
-    const typeSelect = document.getElementById("type");
+    const typeSelect = document.getElementById("report_type");
     const customGroup = document.getElementById("custom-type-group");
     const customInput = document.getElementById("custom_type");
     const fileInput = document.getElementById("images");
