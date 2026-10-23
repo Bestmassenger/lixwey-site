@@ -53,7 +53,12 @@
       background: rgba(5, 9, 18, 0.65); box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.16);
     }
     select.control option { background: var(--bg-soft); color: var(--text); }
-    textarea.control { min-height: 140px; resize: vertical; }
+    textarea.control { 
+      min-height: 140px; 
+      max-height: 400px; /* Максимальная высота */
+      resize: none;      /* Запрещаем ручное изменение размера */
+      overflow-y: hidden; /* Скрываем скролл, пока не достигнут максимум */
+    }
 
     .form-grid {
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
@@ -125,7 +130,6 @@
     <section class="form-card">
       <div class="form-heading">
         <h2>Новое обращение</h2>
-        <p>Поля без пометки «необязательно» обязательны.</p>
       </div>
 
       <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" enctype="multipart/form-data" id="report-form">
@@ -142,7 +146,16 @@
 
         <div class="field" id="custom-type-group" hidden>
           <label for="custom_type" class="field-label">Уточните тип обращения</label>
-          <input type="text" id="custom_type" name="custom_type" class="control" placeholder="Кратко укажите тему обращения" maxlength="150" disabled>
+          <input 
+            type="text" 
+            id="custom_type" 
+            name="custom_type" 
+            class="control" 
+            placeholder="Кратко укажите тему обращения" 
+            minlength="3" 
+            maxlength="100" 
+            disabled
+          >
         </div>
 
         <div class="form-grid">
@@ -160,15 +173,23 @@
         </div>
 
         <div class="field">
-          <label for="message" class="field-label">Сообщение</label>
-          <textarea id="message" name="message" class="control" placeholder="Расскажите, что произошло или что вы хотите улучшить..." maxlength="10000" required></textarea>
-        </div>
-
-        <div class="field">
           <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-            <span class="field-label" id="images-label">Скриншоты <span class="optional">— необязательно</span></span>
-            <span class="file-counter" id="file-counter">0 из 3</span>
+            <label for="message" class="field-label">Сообщение</label>
+            <span class="file-counter" id="message-counter" style="color: #fbbf24;">Мин. 20 символов</span>
           </div>
+          
+          <textarea 
+            id="message" 
+            name="message" 
+            class="control" 
+            placeholder="Расскажите, что произошло или что вы хотите улучшить..." 
+            minlength="20" 
+            maxlength="3000" 
+            required
+            oninput="autoResize(this); updateMessageCounter(this);"
+            rows="1"
+          ></textarea>
+        </div>
 
           <input type="file" id="images" name="images" class="file-input" accept="image/jpeg,image/png,image/webp" multiple>
           
@@ -260,6 +281,7 @@
         removeButton.textContent = "×";
         removeButton.addEventListener("click", () => {
           selectedFiles.splice(index, 1);
+          isFormDirty = true; // <--- Добавь эту строку
           renderPreviews();
         });
 
@@ -287,6 +309,72 @@
         event.formData.append("images", file, file.name);
       });
     });
+
+    function updateMessageCounter(textarea) {
+      const counter = document.getElementById('message-counter');
+      const minLength = 20;
+      const maxLength = 3000;
+      const currentLength = textarea.value.length;
+
+      if (currentLength < minLength) {
+        // Пока меньше 10 символов — показываем, сколько не хватает
+        const remaining = minLength - currentLength;
+        counter.textContent = `Минимум ${remaining} симв.`;
+        counter.style.color = '#fbbf24'; // Желтый цвет (предупреждение)
+      } else {
+        // Когда набрали минимум — показываем, сколько осталось до максимума
+        const remaining = maxLength - currentLength;
+        counter.textContent = `Осталось ${remaining} симв.`;
+        counter.style.color = 'var(--muted)'; // Обычный серый цвет
+      }
+    }
+
+    function autoResize(textarea) {
+      textarea.style.height = 'auto'; // Сбрасываем высоту
+      // Устанавливаем высоту по содержимому, но не больше max-height (400px)
+      const newHeight = Math.min(textarea.scrollHeight, 400); 
+      textarea.style.height = newHeight + 'px';
+      
+      // Если текст превышает 400px, включаем скролл
+      if (textarea.scrollHeight > 400) {
+        textarea.style.overflowY = 'auto';
+      } else {
+        textarea.style.overflowY = 'hidden';
+      }
+    }
+
+      // Защита от случайного закрытия/обновления страницы
+    let isFormDirty = false;
+
+    // Отслеживаем любые изменения в полях формы
+    form.addEventListener("input", () => {
+      isFormDirty = true;
+    });
+
+    // Отслеживаем добавление файлов (они не вызывают событие 'input')
+    fileInput.addEventListener("change", () => {
+      isFormDirty = true;
+    });
+
+    // Также отслеживаем удаление файлов (через крестики)
+    // (вызывается внутри функции renderPreviews, мы добавим это туда чуть позже)
+
+    // Слушаем попытку закрыть/обновить страницу
+    window.addEventListener("beforeunload", (event) => {
+      if (isFormDirty) {
+        // Стандартный вызов для показа окна браузера
+        event.preventDefault();
+        // Для старых браузеров
+        event.returnValue = "";
+      }
+    });
+
+    // Если форма успешно отправилась — снимаем флаг
+    form.addEventListener("submit", () => {
+      isFormDirty = false;
+    });
+
+
   </script>
 </body>
 </html>

@@ -162,3 +162,31 @@ footer {
   .nav-inner { padding: 12px 0; }
   .footer-inner { flex-direction: column; text-align: center; }
 }
+
+
+
+/* Кастомный темный скроллбар */
+::-webkit-scrollbar {
+  width: 10px;               /* Ширина скроллбара */
+  height: 10px;              /* Высота для горизонтального */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);     /* Цвет дорожки (как фон страницы) */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a354a;       /* Цвет ползунка (темно-синий/серый) */
+  border-radius: 5px;        /* Закругление */
+  border: 2px solid var(--bg); /* Отступы, чтобы ползунок казался тоньше */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a90d9;       /* Синий цвет при наведении (в тон акценту) */
+}
+
+/* Поддержка скроллбара в Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a354a var(--bg);
+}
