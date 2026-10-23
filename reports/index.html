@@ -136,8 +136,8 @@
       <form id="report-form" enctype="multipart/form-data">
         
         <div class="field">
-          <label for="type" class="field-label">Тип обращения</label>
-          <select id="type" name="type" class="control" required>
+          <label for="report_type" class="field-label">Тип обращения</label>
+          <select id="report_type" name="report_type" class="control" required>
             <option value="bug">Ошибка в приложении</option>
             <option value="suggestion">Предложение по улучшению</option>
             <option value="abuse">Жалоба на пользователя</option>
@@ -382,7 +382,7 @@
     });
 
 
-    
+
     // --- Отправка формы на API ---
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
