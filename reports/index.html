@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Обратная связь — Lixwey</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="../favicon.png">
   <!-- Подключаем общий файл стилей -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
   
   <style>
     /* Стили только для формы (чтобы не засорять общий файл) */
@@ -112,15 +112,16 @@
   <!-- Навигация 1-в-1 -->
   <nav class="nav">
     <div class="container nav-inner">
-      <a href="index.html" class="logo">
-        <img src="favicon.png" alt="Логотип Lixwey" class="logo-img">
-        Lixwey
+      <!-- Логотип и Главная -->
+      <a href="../index.html" class="logo">
+          <img src="../favicon.png" alt="Логотип Lixwey" class="logo-img">
+          Lixwey
       </a>
       <div class="nav-links">
-        <a href="index.html#news">Новости</a>
-        <a href="index.html#download">Скачать</a>
-        <a href="index.html#status">Статус</a>
-        <a href="reports.html" class="btn btn-ghost" style="border-color: var(--accent); color: var(--accent);">Обратная связь</a>
+        <a href="../index.html#news">Новости</a>
+        <a href="../index.html#download">Скачать</a>
+        <a href="../index.html#status">Статус</a>
+        <a href="index.html" class="btn btn-ghost" style="border-color: var(--accent); color: var(--accent);">Обратная связь</a>
       </div>
     </div>
   </nav>
@@ -191,6 +192,12 @@
           ></textarea>
         </div>
 
+        <div class="field">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span class="field-label" id="images-label">Скриншоты <span class="optional">— необязательно</span></span>
+            <span class="file-counter" id="file-counter">0 из 3</span>
+          </div>
+
           <input type="file" id="images" name="images" class="file-input" accept="image/jpeg,image/png,image/webp" multiple>
           
           <label for="images" class="upload-zone">
@@ -210,7 +217,7 @@
           <input type="checkbox" name="consent" value="accepted" required>
           <span>
             Я согласен на обработку моих персональных данных (email, username, текста сообщения и вложений) в соответствии с 
-            <a href="/privacy" target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a>.
+            <a href="../privacy/" target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a>.
           </span>
         </label>
 
@@ -226,9 +233,9 @@
     <div class="container footer-inner">
       <span>© 2026 Lixwey. Все права защищены.</span>
       <div class="footer-links">
-        <a href="reports.html">Поддержка</a>
-        <a href="index.html#status">Статус</a>
-        <a href="index.html#download">Приложение</a>
+        <a href="index.html">Поддержка</a>
+        <a href="../index.html#status">Статус</a>
+        <a href="../index.html#download">Приложение</a>
       </div>
     </div>
   </footer>
