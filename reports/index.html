@@ -133,7 +133,7 @@
         <h2>Новое обращение</h2>
       </div>
 
-      <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" enctype="multipart/form-data" id="report-form">
+      <form id="report-form" enctype="multipart/form-data">
         
         <div class="field">
           <label for="type" class="field-label">Тип обращения</label>
@@ -381,6 +381,53 @@
       isFormDirty = false;
     });
 
+
+    
+    // --- Отправка формы на API ---
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Отправка...";
+
+      // Собираем данные формы
+      const formData = new FormData(form);
+      
+      // Добавляем выбранные картинки (так как мы их удаляем из input вручную)
+      formData.delete("images");
+      selectedFiles.forEach(file => {
+        formData.append("images", file, file.name);
+      });
+
+      try {
+        // ОТПРАВЛЯЕМ НА ТВОЙ API (замени на IP или домен, если нужно)
+        const response = await fetch("https://api.lixwey.ru/report", {
+          method: "POST",
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          alert(`Спасибо! Ваше обращение №${data.report_id} принято. Мы свяжемся с вами.`);
+          form.reset();
+          selectedFiles = [];
+          renderPreviews();
+          // Сбрасываем флаг, чтобы не было предупреждения
+          isFormDirty = false;
+        } else {
+          alert("Ошибка: " + data.message);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Ошибка соединения с сервером. Попробуйте позже.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
 
   </script>
 </body>
