@@ -4,151 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Обратная связь — Lixwey</title>
-  <meta name="description" content="Обратная связь Lixwey: сообщите об ошибке, предложите улучшение или отправьте жалобу.">
   <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" href="favicon.png">
+  <!-- Подключаем общий файл стилей -->
+  <link rel="stylesheet" href="css/style.css">
   
   <style>
-    :root {
-      --bg: #070b16;
-      --bg-soft: #0d1424;
-      --card: rgba(255, 255, 255, .06);
-      --border: rgba(255, 255, 255, .10);
-      --text: #eef2ff;
-      --muted: #9aa6bd;
-      --accent: #4a90d9;
-      --accent-2: #7c5cff;
-      --ok: #34d399;
-      --warn: #fbbf24;
-      --radius: 20px;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Абсолютно такой же фон (Aurora), как на главной */
-    .aurora {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background:
-        radial-gradient(600px 400px at 15% 10%, rgba(74, 144, 217, .28), transparent 60%),
-        radial-gradient(700px 500px at 85% 15%, rgba(124, 92, 255, .22), transparent 65%),
-        radial-gradient(600px 500px at 50% 100%, rgba(52, 211, 153, .12), transparent 70%);
-      filter: blur(20px);
-    }
-
-    .container {
-      width: min(1080px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    /* Верхняя навигация 1-в-1 как на главной */
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(18px);
-      background: rgba(7, 11, 22, .72);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 16px 0;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: -.02em;
-      text-decoration: none;
-      color: var(--text);
-    }
-
-    .logo-img {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      object-fit: cover;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color .2s ease;
-    }
-
-    .nav-links a:hover { color: var(--text); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 26px;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 15px;
-      border: 1px solid transparent;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      color: white;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 16px 35px rgba(74, 144, 217, .28);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 20px 45px rgba(124, 92, 255, .35);
-    }
-
-    .btn-ghost {
-      color: var(--text);
-      background: rgba(255, 255, 255, .06);
-      border-color: var(--border);
-      padding: 8px 16px; /* Чуть меньше для навигации */
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
-    .btn-ghost:hover {
-      background: rgba(255, 255, 255, .1);
-      transform: translateY(-2px);
-    }
-
-    /* Стили для самой формы обратной связи */
+    /* Стили только для формы (чтобы не засорять общий файл) */
     .form-section {
-      padding: 40px 0 80px;
+      padding: 60px 0 80px;
       display: flex;
       justify-content: center;
     }
@@ -165,199 +28,83 @@
     }
 
     .form-heading {
-      display: flex;
-      align-items: center;
-      gap: 14px;
       margin-bottom: 26px;
       padding-bottom: 22px;
       border-bottom: 1px solid var(--border);
     }
 
-    .form-heading h2 {
-      font-size: 21px;
-      letter-spacing: -.02em;
-    }
-    .form-heading p {
-      color: var(--muted);
-      font-size: 14px;
-    }
+    .form-heading h2 { font-size: 21px; letter-spacing: -.02em; }
+    .form-heading p { color: var(--muted); font-size: 14px; }
 
     .field { margin-bottom: 20px; }
-
-    .field-label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .optional {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 400;
-    }
+    .field-label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: var(--text); }
+    .optional { color: var(--muted); font-size: 12px; font-weight: 400; }
 
     .control {
-      display: block;
-      width: 100%;
-      min-height: 48px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(5, 9, 18, 0.4);
-      color: var(--text);
-      font-size: 15px;
-      font-family: inherit;
+      display: block; width: 100%; min-height: 48px; padding: 12px 14px;
+      border: 1px solid var(--border); border-radius: 12px;
+      background: rgba(5, 9, 18, 0.4); color: var(--text);
+      font-size: 15px; font-family: inherit;
       transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     }
-
     .control::placeholder { color: #78849d; }
     .control:focus {
-      outline: none;
-      border-color: var(--accent-2);
-      background: rgba(5, 9, 18, 0.65);
-      box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.16);
+      outline: none; border-color: var(--accent-2);
+      background: rgba(5, 9, 18, 0.65); box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.16);
     }
-
     select.control option { background: var(--bg-soft); color: var(--text); }
     textarea.control { min-height: 140px; resize: vertical; }
 
-    /* Сетка для email и username */
     .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
     }
 
-    /* Загрузка файлов */
     .upload-zone {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      min-height: 120px;
-      padding: 22px 16px;
-      border: 1px dashed rgba(158, 171, 204, 0.38);
-      border-radius: 16px;
-      background: rgba(74, 144, 217, 0.04);
-      text-align: center;
-      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; min-height: 120px; padding: 22px 16px;
+      border: 1px dashed rgba(158, 171, 204, 0.38); border-radius: 16px;
+      background: rgba(74, 144, 217, 0.04); text-align: center; cursor: pointer;
       transition: border-color 0.2s ease, background 0.2s ease;
     }
-    .upload-zone:hover {
-      border-color: var(--accent-2);
-      background: rgba(124, 92, 255, 0.08);
-    }
-    .upload-zone .icon {
-      width: 28px; height: 28px; color: var(--accent-2);
-    }
+    .upload-zone:hover { border-color: var(--accent-2); background: rgba(124, 92, 255, 0.08); }
+    .upload-zone svg { width: 28px; height: 28px; color: var(--accent-2); }
     .upload-title { font-size: 14px; font-weight: 600; color: var(--text); }
     .upload-description { font-size: 12px; color: var(--muted); }
     .file-input { display: none; }
     .file-counter { font-size: 12px; color: var(--muted); }
 
-    /* Превью картинок */
-    .preview-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 14px;
-    }
+    .preview-container { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
     .preview-container:empty { display: none; }
-    .preview-item {
-      position: relative;
-      width: 94px; height: 94px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--bg-soft);
-    }
-    .preview-item img {
-      display: block; width: 100%; height: 100%;
-      border-radius: inherit; object-fit: cover;
-    }
+    .preview-item { position: relative; width: 94px; height: 94px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-soft); }
+    .preview-item img { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
     .remove-btn {
-      position: absolute; top: -6px; right: -6px;
-      display: grid; place-items: center;
-      width: 28px; height: 28px; padding: 0;
-      border: 2px solid var(--bg);
-      border-radius: 50%;
-      background: #dd4965; color: white;
+      position: absolute; top: -6px; right: -6px; display: grid; place-items: center;
+      width: 28px; height: 28px; padding: 0; border: 2px solid var(--bg);
+      border-radius: 50%; background: #dd4965; color: white;
       font-size: 20px; line-height: 1; cursor: pointer;
     }
     .remove-btn:hover { background: #bb3450; }
 
-    /* Галочка согласия */
     .consent-label {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin: 24px 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-      cursor: pointer;
+      display: flex; align-items: flex-start; gap: 12px; margin: 24px 0;
+      color: var(--muted); font-size: 13px; line-height: 1.6; cursor: pointer;
     }
-    .consent-label input {
-      width: 18px; height: 18px; margin-top: 2px;
-      flex-shrink: 0; accent-color: var(--accent-2); cursor: pointer;
-    }
-    .consent-label a {
-      color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px;
-    }
+    .consent-label input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--accent-2); cursor: pointer; }
+    .consent-label a { color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px; }
     .consent-label a:hover { color: #a99aff; }
-
-    /* Кнопка отправки */
-    .submit-btn {
-      width: 100%;
-      min-height: 52px;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-
-    /* Подвал 1-в-1 как на главной */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 30px 0 40px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .footer-inner {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .footer-links {
-      display: flex;
-      gap: 20px;
-    }
-    .footer-links a {
-      color: var(--muted);
-      text-decoration: none;
-    }
-    .footer-links a:hover { color: var(--text); }
-
-    /* Мобильная адаптация */
-    @media (max-width: 900px) {
-      .nav-links a:not(.btn) { display: none; }
-    }
+    
+    .submit-btn { width: 100%; min-height: 52px; font-size: 16px; margin-top: 10px; }
+    
     @media (max-width: 600px) {
-      .container { width: calc(100% - 28px); }
-      .nav-inner { padding: 12px 0; }
       .form-card { padding: 22px 18px; }
       .form-grid { grid-template-columns: 1fr; }
-      .footer-inner { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
 <body>
-  <!-- Тот же фон -->
   <div class="aurora"></div>
 
-  <!-- Та же верхняя панель -->
+  <!-- Навигация 1-в-1 -->
   <nav class="nav">
     <div class="container nav-inner">
       <a href="index.html" class="logo">
@@ -368,7 +115,6 @@
         <a href="index.html#news">Новости</a>
         <a href="index.html#download">Скачать</a>
         <a href="index.html#status">Статус</a>
-        <!-- Кнопка указывает на текущую страницу -->
         <a href="reports.html" class="btn btn-ghost" style="border-color: var(--accent); color: var(--accent);">Обратная связь</a>
       </div>
     </div>
@@ -378,10 +124,8 @@
   <main class="container form-section">
     <section class="form-card">
       <div class="form-heading">
-        <div>
-          <h2>Новое обращение</h2>
-          <p>Поля без пометки «необязательно» обязательны.</p>
-        </div>
+        <h2>Новое обращение</h2>
+        <p>Поля без пометки «необязательно» обязательны.</p>
       </div>
 
       <form action="https://formspree.io/f/ТВОЙ_КОД" method="POST" enctype="multipart/form-data" id="report-form">
@@ -411,7 +155,7 @@
             <label for="username" class="field-label">
               Username <span class="optional">— необязательно</span>
             </label>
-            <input type="text" id="username" name="username" class="control" placeholder="@username" autocapitalize="none" spellcheck="false" maxlength="64">
+            <input type="text" id="username" name="username" class="control" placeholder="@username" maxlength="64">
           </div>
         </div>
 
@@ -429,7 +173,7 @@
           <input type="file" id="images" name="images" class="file-input" accept="image/jpeg,image/png,image/webp" multiple>
           
           <label for="images" class="upload-zone">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 16V4"></path>
               <path d="m7 9 5-5 5 5"></path>
               <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"></path>
@@ -456,7 +200,7 @@
     </section>
   </main>
 
-  <!-- Тот же подвал -->
+  <!-- Подвал 1-в-1 -->
   <footer>
     <div class="container footer-inner">
       <span>© 2026 Lixwey. Все права защищены.</span>
@@ -468,7 +212,6 @@
     </div>
   </footer>
 
-  <!-- Скрипт для работы превью и кастомного типа обращения -->
   <script>
     const form = document.getElementById("report-form");
     const typeSelect = document.getElementById("type");
@@ -481,7 +224,6 @@
     const MAX_FILES = 3;
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
     const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
-
     let selectedFiles = [];
     let previewUrls = [];
 
@@ -491,7 +233,6 @@
       customInput.required = isOther;
       customInput.disabled = !isOther;
     }
-
     typeSelect.addEventListener("change", toggleCustomType);
     toggleCustomType();
 
@@ -511,7 +252,6 @@
         const image = document.createElement("img");
         const url = URL.createObjectURL(file);
         previewUrls.push(url);
-        
         image.src = url;
         
         const removeButton = document.createElement("button");
@@ -530,7 +270,6 @@
 
     fileInput.addEventListener("change", () => {
       const incomingFiles = Array.from(fileInput.files || []);
-      
       incomingFiles.forEach(file => {
         if (!ALLOWED_TYPES.has(file.type)) return;
         if (file.size > MAX_FILE_SIZE) return;
@@ -538,8 +277,7 @@
         if (selectedFiles.length >= MAX_FILES) return;
         selectedFiles.push(file);
       });
-
-      fileInput.value = ""; // Очищаем input для возможности повторного выбора
+      fileInput.value = "";
       renderPreviews();
     });
 
