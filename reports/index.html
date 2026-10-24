@@ -404,6 +404,33 @@
         });
         
         const data = await response.json();
+
+        // Превышен Rate Limit
+        if (response.status === 429) {
+            const retryAfter = Number(
+                response.headers.get("Retry-After") || 60
+            );
+
+            const minutes = Math.max(
+                1,
+                Math.ceil(retryAfter / 60)
+            );
+
+            alert(
+                "Вы отправили слишком много обращений.\n" +
+                `Попробуйте примерно через ${minutes} мин.`
+            );
+
+            return;
+        }
+
+        // Redis или сервер временно недоступен
+        if (response.status === 503) {
+            alert(
+                "Сервис временно недоступен. Попробуйте позже."
+            );
+            return;
+        }
         
         if (data.success) {
           alert(`Спасибо! Ваше обращение №${data.report_id} принято.`);
@@ -415,7 +442,14 @@
           // Сбрасываем защиту от закрытия
           isFormDirty = false; 
         } else {
-          alert("Ошибка: " + (data.message || "Неизвестная ошибка"));
+            alert(
+                "Ошибка: " +
+                (data.message || (
+                    typeof data.detail === "string"
+                        ? data.detail
+                        : "Неизвестная ошибка"
+                ))
+            );
         }
       } catch (err) {
         console.error("Fetch error:", err);
