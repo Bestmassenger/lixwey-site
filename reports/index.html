@@ -408,14 +408,20 @@
                 response.headers.get("Retry-After") || 60
             );
 
-            const minutes = Math.max(
-                1,
-                Math.ceil(retryAfter / 60)
-            );
+            const hours = Math.floor(retryAfter / 3600);
+            const minutes = Math.ceil((retryAfter % 3600) / 60);
+
+            let waitText;
+
+            if (hours > 0) {
+                waitText = `${hours} ч. ${minutes} мин.`;
+            } else {
+                waitText = `${minutes} мин.`;
+            }
 
             alert(
                 "Вы отправили слишком много обращений.\n" +
-                `Попробуйте примерно через ${minutes} мин.`
+                `Попробуйте через ${waitText}`
             );
 
             return;
