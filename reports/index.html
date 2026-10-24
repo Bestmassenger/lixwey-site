@@ -310,13 +310,6 @@
       renderPreviews();
     });
 
-    form.addEventListener("formdata", event => {
-      event.formData.delete("images");
-      selectedFiles.forEach(file => {
-        event.formData.append("images", file, file.name);
-      });
-    });
-
     function updateMessageCounter(textarea) {
       const counter = document.getElementById('message-counter');
       const minLength = 20;
@@ -404,6 +397,10 @@
         });
         
         const data = await response.json();
+
+        console.log("REPORT STATUS:", response.status);
+        console.log("REPORT DATA:", data);
+        console.log("REPORT URL:", response.url);
 
         // Превышен Rate Limit
         if (response.status === 429) {
