@@ -47,6 +47,42 @@
     .feature h3 { margin-bottom: 8px; font-size: 18px; letter-spacing: -.02em; }
     .feature p { color: var(--muted); font-size: 15px; }
     
+    .lixwey-showcase { margin-bottom: 80px; }
+    .lixwey-showcase h2 { margin-bottom: 24px; font-size: clamp(26px, 4vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
+    .lixwey-showcase-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .lixwey-showcase-card { min-width: 0; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: rgba(255,255,255,.04); backdrop-filter: blur(14px); box-shadow: 0 16px 40px rgba(0,0,0,.18); transition: transform .25s ease, border-color .25s ease; }
+    .lixwey-showcase-card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-bottom: 1px solid var(--border); background: rgba(74,144,217,.08); color: var(--muted); font-size: 14px; }
+    .lixwey-showcase-card figcaption { padding: 24px; }
+    .lixwey-showcase-label { display: block; margin-bottom: 10px; color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+    .lixwey-showcase-card h3 { margin-bottom: 10px; font-size: 20px; line-height: 1.3; letter-spacing: -.02em; }
+    .lixwey-showcase-card p { color: var(--muted); font-size: 15px; }
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .lixwey-showcase-card:hover { transform: translateY(-4px); border-color: rgba(124,92,255,.35); }
+    }
+    @media (max-width: 900px) {
+      .lixwey-showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 600px) {
+      .lixwey-showcase { margin-bottom: 56px; }
+      .lixwey-showcase-grid { grid-template-columns: 1fr; }
+      .lixwey-showcase-card figcaption { padding: 20px; }
+    }
+
+    .lixwey-promo-feed { display: grid; gap: 28px; margin-bottom: 80px; }
+    .lixwey-promo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: clamp(24px, 4vw, 56px); padding: 24px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(255,255,255,.04); backdrop-filter: blur(14px); box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+    .lixwey-promo-media { min-width: 0; overflow: hidden; border-radius: 16px; }
+    .lixwey-promo-media img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: inherit; }
+    .lixwey-promo-copy { min-width: 0; padding: 16px 8px; }
+    .lixwey-promo-label { display: block; margin-bottom: 18px; color: #a78bfa; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .lixwey-promo h2 { margin-bottom: 20px; font-size: clamp(28px, 3.3vw, 40px); line-height: 1.15; letter-spacing: -.035em; text-wrap: balance; }
+    .lixwey-promo p { max-width: 38ch; color: var(--muted); font-size: clamp(16px, 1.6vw, 18px); }
+    @media (max-width: 700px) {
+      .lixwey-promo-feed { gap: 20px; margin-bottom: 56px; }
+      .lixwey-promo { grid-template-columns: 1fr; gap: 8px; padding: 16px; }
+      .lixwey-promo-copy { padding: 20px 8px 12px; }
+      .lixwey-promo--reverse .lixwey-promo-media { grid-row: 1; }
+    }
+
     .reveal { opacity: 0; transform: translateY(22px); animation: reveal .7s ease forwards; }
     .reveal:nth-child(2) { animation-delay: .08s; }
     .reveal:nth-child(3) { animation-delay: .16s; }
@@ -109,6 +145,72 @@
         <p>Прозрачные настройки видимости и управления своим контентом.</p>
       </article>
     </section>
+
+    <section class="lixwey-showcase" aria-labelledby="lixwey-showcase-title">
+      <h2 id="lixwey-showcase-title">Почему Lixwey</h2>
+      <div class="lixwey-showcase-grid">
+        <figure class="lixwey-showcase-card">
+          <img src="images/lixwey-feature-1.svg" alt="Иллюстрация диалога: окно переписки с сообщениями" width="800" height="600" loading="lazy" decoding="async">
+          <figcaption>
+            <span class="lixwey-showcase-label">Общение без лишнего</span>
+            <h3>Быстрые и удобные диалоги</h3>
+            <p>Lixwey делает общение простым, современным и комфортным.</p>
+          </figcaption>
+        </figure>
+        <figure class="lixwey-showcase-card">
+          <img src="images/lixwey-feature-2.svg" alt="Иллюстрация смартфона с интерфейсом и UI-карточками" width="800" height="600" loading="lazy" decoding="async">
+          <figcaption>
+            <span class="lixwey-showcase-label">Стильный интерфейс</span>
+            <h3>Современный дизайн</h3>
+            <p>Продуманный внешний вид, приятные цвета и удобная навигация.</p>
+          </figcaption>
+        </figure>
+        <figure class="lixwey-showcase-card">
+          <img src="images/lixwey-feature-3.svg" alt="Иллюстрация цифровой сети: сообщения и профили, соединённые линиями" width="800" height="600" loading="lazy" decoding="async">
+          <figcaption>
+            <span class="lixwey-showcase-label">Всегда на связи</span>
+            <h3>Оставайтесь на связи</h3>
+            <p>Легко общайтесь, следите за сообщениями и оставайтесь в контакте.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    
+    <div class="lixwey-promo-feed">
+      <section class="lixwey-promo" aria-labelledby="lixwey-promo-title-1">
+        <div class="lixwey-promo-media">
+          <img src="images/lixwey-person-1.webp" alt="Девушка с iPhone у окна улыбается, читая сообщения" width="1024" height="1024" loading="lazy" decoding="async">
+        </div>
+        <div class="lixwey-promo-copy">
+          <span class="lixwey-promo-label">Ближе друг к другу</span>
+          <h2 id="lixwey-promo-title-1">Общение, которое всегда рядом</h2>
+          <p>Lixwey помогает оставаться на связи быстро, удобно и красиво.</p>
+        </div>
+      </section>
+
+      <section class="lixwey-promo lixwey-promo--reverse" aria-labelledby="lixwey-promo-title-2">
+        <div class="lixwey-promo-copy">
+          <span class="lixwey-promo-label">В вашем ритме</span>
+          <h2 id="lixwey-promo-title-2">Стильный мессенджер для повседневного общения</h2>
+          <p>Современный интерфейс, удобные диалоги и приятный визуальный стиль.</p>
+        </div>
+        <div class="lixwey-promo-media">
+          <img src="images/lixwey-person-2.webp" alt="Мужчина с iPhone общается в уютном современном кафе" width="1024" height="1024" loading="lazy" decoding="async">
+        </div>
+      </section>
+
+      <section class="lixwey-promo" aria-labelledby="lixwey-promo-title-3">
+        <div class="lixwey-promo-media">
+          <img src="images/lixwey-person-3.webp" alt="Девушка держит iPhone на фоне города в мягком вечернем свете" width="1024" height="1024" loading="lazy" decoding="async">
+        </div>
+        <div class="lixwey-promo-copy">
+          <span class="lixwey-promo-label">Внимание к деталям</span>
+          <h2 id="lixwey-promo-title-3">Lixwey — когда важна каждая деталь</h2>
+          <p>Продуманный дизайн, лёгкая навигация и комфортное общение каждый день.</p>
+        </div>
+      </section>
+    </div>
 
     <section class="grid" id="news">
       <article class="card span-7 reveal">

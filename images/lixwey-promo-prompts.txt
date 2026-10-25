@@ -1,0 +1,16 @@
+Temporary Lixwey promotional photographs
+Generated with the built-in image_gen tool. These are illustrative lifestyle
+images, not real Lixwey screenshots. Local WebP copies are 1024 x 1024 px.
+Replace lixwey-person-1.webp, lixwey-person-2.webp, and lixwey-person-3.webp
+with final photographs using the same names, or update their src in index.html.
+
+images/lixwey-person-1.webp
+Use case: photorealistic-natural. Asset type: temporary promotional photograph for the Lixwey messenger homepage. Primary request: An adult woman in a navy knit sweater, waist-up candid portrait, sitting near a window, smiling softly while holding and looking at a graphite iPhone, rear camera cluster visible. Cool blue interior with a gentle violet accent. Connection and warmth. Style: premium editorial lifestyle photography, realistic skin texture and hands, clean sophisticated composition, authentic and understated, no exaggerated stock-photo pose. Composition: one person, square image, keep entire head and hands and phone inside a generous safe margin for responsive cropping. Color palette: dark navy #0d1424, blue #4a90d9, subtle violet #7c5cff; natural skin tones. Soft flattering diffused light, gently blurred background. Constraints: no text, no watermark, no UI overlay, no added graphic elements, no WhatsApp branding.
+
+images/lixwey-person-2.webp
+Use case: photorealistic-natural. Asset type: temporary promotional photograph for the Lixwey messenger homepage. Primary request: An adult man wearing a muted blue overshirt, waist-up candid portrait in a refined minimal cafe, naturally holding and looking at an iPhone, rear camera cluster visible. Navy and slate setting with soft blue and violet highlights. Relaxed everyday conversation. Style: premium editorial lifestyle photography, realistic skin texture and hands, clean sophisticated composition, authentic and understated, no exaggerated stock-photo pose. Composition: one person, square image, keep entire head and hands and phone inside a generous safe margin for responsive cropping. Color palette: dark navy #0d1424, blue #4a90d9, subtle violet #7c5cff; natural skin tones. Soft flattering diffused light, gently blurred background. Constraints: no text, no watermark, no UI overlay, no added graphic elements, no WhatsApp branding.
+
+images/lixwey-person-3.webp
+Use case: photorealistic-natural. Asset type: temporary promotional photograph for the Lixwey messenger homepage. Primary request: An adult woman in a dark indigo jacket, waist-up candid portrait against softly blurred modern architecture at blue hour, holding an iPhone with rear camera cluster visible, calm confident smile. Soft blue and purple evening light. Thoughtful details and trust. Style: premium editorial lifestyle photography, realistic skin texture and hands, clean sophisticated composition, authentic and understated, no exaggerated stock-photo pose. Composition: one person, square image, keep entire head and hands and phone inside a generous safe margin for responsive cropping. Color palette: dark navy #0d1424, blue #4a90d9, subtle violet #7c5cff; natural skin tones. Soft flattering diffused light, gently blurred background. Constraints: no text, no watermark, no UI overlay, no added graphic elements, no WhatsApp branding.
+
+

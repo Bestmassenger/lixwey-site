@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Современный дизайн</title>
+  <desc id="desc">Временная иллюстрация Lixwey: смартфон с абстрактным интерфейсом и парящими UI-карточками.</desc>
+  <!-- Temporary illustration. Replace with a real Lixwey screenshot when available. -->
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101e38"/><stop offset="1" stop-color="#0b1022"/></linearGradient>
+    <linearGradient id="accent" x2="1" y2="1"><stop stop-color="#4a90d9"/><stop offset="1" stop-color="#7c5cff"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#4a90d9" stop-opacity=".24"/><stop offset="1" stop-color="#4a90d9" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-40%" y="-20%" width="180%" height="160%"><feDropShadow dy="18" stdDeviation="20" flood-color="#030712" flood-opacity=".45"/></filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <ellipse cx="400" cy="300" rx="330" ry="290" fill="url(#glow)"/>
+  <g fill="none" stroke="#9aa6bd" stroke-opacity=".1"><rect x="172" y="106" width="456" height="388" rx="64"/><path d="M112 300h576M400 42v516" stroke-dasharray="4 12"/></g>
+  <g filter="url(#shadow)">
+    <rect x="274" y="54" width="252" height="492" rx="40" fill="#0b1222" stroke="#9aa6bd" stroke-opacity=".4" stroke-width="2"/>
+    <rect x="286" y="66" width="228" height="468" rx="30" fill="#142039"/>
+    <rect x="358" y="78" width="84" height="20" rx="10" fill="#0b1222"/>
+    <text x="308" y="136" fill="#eef2ff" font-family="Arial, sans-serif" font-weight="700" font-size="22">Lixwey</text>
+    <circle cx="478" cy="128" r="13" fill="url(#accent)"/>
+    <rect x="304" y="156" width="192" height="32" rx="12" fill="#202e47"/>
+    <circle cx="322" cy="171" r="5" fill="none" stroke="#9aa6bd" stroke-width="2"/>
+    <path d="m326 175 4 4" stroke="#9aa6bd" stroke-width="2" stroke-linecap="round"/>
+    <rect x="342" y="169" width="92" height="5" rx="2.5" fill="#9aa6bd" fill-opacity=".4"/>
+    <rect x="304" y="204" width="192" height="124" rx="18" fill="url(#accent)"/>
+    <circle cx="458" cy="228" r="43" fill="#eef2ff" fill-opacity=".08"/>
+    <circle cx="458" cy="228" r="65" fill="none" stroke="#eef2ff" stroke-opacity=".12"/>
+    <rect x="322" y="274" width="114" height="8" rx="4" fill="#eef2ff" fill-opacity=".9"/>
+    <rect x="322" y="292" width="78" height="6" rx="3" fill="#eef2ff" fill-opacity=".5"/>
+    <g fill="#202e47"><rect x="304" y="344" width="88" height="88" rx="16"/><rect x="408" y="344" width="88" height="88" rx="16"/></g>
+    <g fill="url(#accent)"><rect x="320" y="360" width="26" height="26" rx="8"/><circle cx="437" cy="373" r="13"/></g>
+    <g fill="#9aa6bd" fill-opacity=".6"><rect x="320" y="402" width="54" height="6" rx="3"/><rect x="424" y="402" width="54" height="6" rx="3"/></g>
+    <rect x="304" y="452" width="192" height="44" rx="16" fill="#0b1426"/>
+    <g fill="#9aa6bd"><circle cx="334" cy="474" r="5"/><circle cx="378" cy="474" r="5"/><circle cx="422" cy="474" r="5"/></g>
+    <circle cx="466" cy="474" r="6" fill="#7c5cff"/>
+    <rect x="362" y="518" width="76" height="4" rx="2" fill="#9aa6bd" fill-opacity=".5"/>
+    <rect x="116" y="246" width="188" height="86" rx="20" fill="#1b2943" stroke="#eef2ff" stroke-opacity=".14"/>
+    <circle cx="150" cy="280" r="13" fill="url(#accent)"/>
+    <rect x="176" y="272" width="102" height="7" rx="3.5" fill="#eef2ff" fill-opacity=".75"/>
+    <rect x="176" y="290" width="72" height="6" rx="3" fill="#9aa6bd" fill-opacity=".5"/>
+    <rect x="498" y="370" width="172" height="76" rx="20" fill="#1b2943" stroke="#eef2ff" stroke-opacity=".14"/>
+    <g fill="#4a90d9"><rect x="518" y="412" width="16" height="16" rx="4" opacity=".5"/><rect x="544" y="398" width="16" height="30" rx="4" opacity=".7"/><rect x="570" y="386" width="16" height="42" rx="4"/></g>
+    <rect x="596" y="390" width="16" height="38" rx="4" fill="#7c5cff"/><rect x="622" y="402" width="16" height="26" rx="4" fill="#7c5cff" fill-opacity=".6"/>
+  </g>
+</svg>
