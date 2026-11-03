@@ -263,23 +263,22 @@
     </div>
   </footer>
 
+  <script src="../policy-config.js"></script>
   <script>
-    const POLICY_VERSION = "1.0";
-    const POLICY_REVISION_DATE = "21.10.2026";
+    const revisionElement =
+        document.getElementById("policy-revision-date");
 
-    const revisionElement = document.getElementById(
-      "policy-revision-date"
-    );
+    if (revisionElement && window.LIXWEY_POLICY) {
+        const revision = window.LIXWEY_POLICY.revisionDate;
 
-    if (revisionElement) {
-      revisionElement.textContent = POLICY_REVISION_DATE;
+        revisionElement.textContent = revision;
 
-      const [day, month, year] = POLICY_REVISION_DATE.split(".");
+        const [day, month, year] = revision.split(".");
 
-      revisionElement.setAttribute(
-        "datetime",
-        `${year}-${month}-${day}`
-      );
+        revisionElement.setAttribute(
+            "datetime",
+            `${year}-${month}-${day}`
+        );
     }
   </script>
 </body>

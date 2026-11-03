@@ -240,6 +240,8 @@
     </div>
   </footer>
 
+  <script src="../policy-config.js"></script>
+
   <script>
     const form = document.getElementById("report-form");
     const typeSelect = document.getElementById("report_type");
@@ -383,7 +385,30 @@
 
       // Собираем данные формы
       const formData = new FormData(form);
-      
+
+      // Получаем версию и дату редакции политики
+      const policy = window.LIXWEY_POLICY;
+
+      if (
+        !policy ||
+        !policy.version ||
+        !policy.revisionDate
+      ) {
+        alert(
+          "Не удалось определить действующую редакцию политики " +
+          "конфиденциальности.\n\n" +
+          "Обновите страницу и попробуйте ещё раз."
+        );
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        return;
+      }
+
+      // Передаём обе переменные серверу
+      formData.set("policy_version", policy.version);
+      formData.set("policy_revision_date", policy.revisionDate);
+
       // Добавляем выбранные картинки (так как мы их удаляем из input вручную)
       formData.delete("images");
       selectedFiles.forEach(file => {
@@ -401,7 +426,21 @@
         console.log("REPORT STATUS:", response.status);
         console.log("REPORT DATA:", data);
         console.log("REPORT URL:", response.url);
-        
+
+        // Версия или дата редакции политики устарела
+        if (response.status === 409) {
+          alert(
+            "Политика конфиденциальности обновлена.\n\n" +
+            "Версия или дата редакции политики, с которой вы " +
+            "ознакомились, отличается от актуальной.\n\n" +
+            "Обращение не отправлено. Обновите страницу, " +
+            "ознакомьтесь с действующей редакцией политики " +
+            "и подтвердите согласие повторно.\n\n" +
+            "Если проблема сохраняется, попробуйте ещё раз через 5 минут."
+          );
+
+          return;
+        }
 
         // Превышен Rate Limit
         if (response.status === 429) {
