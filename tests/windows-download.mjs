@@ -105,8 +105,9 @@ try {
   }
   on('Fetch.requestPaused', async ({ requestId, request }) => {
     try {
-      if (request.url.includes('/api/updates/windows')) {
-        assert.equal(request.url, 'https://api.lixwey.ru/api/updates/windows?current_version=0.0.0');
+      if (/\/api\/updates\/(windows|android)/.test(request.url)) {
+        const platform = request.url.includes('/updates/android') ? 'android' : 'windows';
+        assert.equal(request.url, `https://api.lixwey.ru/api/updates/${platform}?${platform === 'android' ? 'current_version_code=0' : 'current_version=0.0.0'}`);
         releaseRequests++;
         if (scenario === 'loading') { held = requestId; return; }
         await respond(requestId);
@@ -131,6 +132,119 @@ try {
   })()`);
   const ready = () => until(`document.getElementById('release-panel').getAttribute('aria-busy') === 'false'`);
 
+  if (process.argv.includes('--downloads') || process.argv.includes('--homepage')) {
+    // One bounded pass for Android states and both platforms' download layouts.
+    fixture.size_bytes = 215272653;
+    const current = () => evaluate(`(() => {
+      const link = document.querySelector('#android-download, #windows-download');
+      return { href: link.getAttribute('href'), disabled: link.getAttribute('aria-disabled'),
+        size: document.getElementById('release-size').textContent, version: document.getElementById('release-version').textContent,
+        retry: !document.getElementById('release-retry').hidden,
+        stores: [...document.querySelectorAll('.store-link')].map(a => ({ href: a.getAttribute('href'), disabled: a.getAttribute('aria-disabled'), soon: a.querySelector('small').textContent })) };
+    })()`);
+    const viewport = (width, height = 900) => send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    if (!process.argv.includes('--homepage')) {
+    await viewport(1440);
+    for (const name of ['available', 'unavailable', 'http-error', 'offline']) {
+      scenario = name;
+      await navigate('/download/android/');
+      await ready();
+      const result = await current();
+      assert.equal(result.href, name === 'available' ? 'https://api.lixwey.ru/downloads/android' : null);
+      if (name === 'available') {
+        assert.equal(result.size, '205,3 МБ');
+        assert.equal(result.version, '1.0');
+      } else {
+        assert.equal(result.disabled, 'true');
+        assert.equal(result.retry, true);
+        assert.equal(result.version, '');
+      }
+      assert.deepEqual(result.stores, Array.from({ length: 2 }, () => ({ href: null, disabled: 'true', soon: 'Скоро' })));
+      console.log('PASS Android ' + name + '; stores independent and disabled');
+    }
+    scenario = 'available';
+    await evaluate(`document.getElementById('release-retry').click()`);
+    await ready();
+    assert.equal((await current()).href, 'https://api.lixwey.ru/downloads/android');
+    const accelerated = await send('Page.addScriptToEvaluateOnNewDocument', { source: 'const originalTimeout = window.setTimeout; window.setTimeout = (fn, ms, ...args) => originalTimeout(fn, ms === 12000 ? 50 : ms, ...args);' });
+    scenario = 'loading';
+    await navigate('/download/android/');
+    await ready();
+    assert.equal((await current()).href, null);
+    assert.equal((await current()).retry, true);
+    await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: accelerated.identifier });
+    console.log('PASS Android retry and request timeout (accelerated timer)');
+    scenario = 'mandatory';
+    await navigate('/download/android/');
+    await ready();
+    assert.equal(await evaluate(`document.body.textContent.includes('Обязательное обновление')`), false);
+    for (const width of [1920, 1440, 768, 390, 320]) {
+      await viewport(width);
+      const layout = await evaluate(`(() => {
+        const outside = [...document.querySelectorAll('body *')].filter(el => {
+          const r = el.getBoundingClientRect(); return r.width && (r.left < -1 || r.right > innerWidth + 1);
+        }).map(el => el.className || el.tagName);
+        const card = document.querySelector('.release-card').getBoundingClientRect();
+        const preview = document.querySelector('.android-preview').getBoundingClientRect();
+        return { outside, columns: card.right <= preview.left, stacked: preview.top >= card.bottom,
+          clipped: [...document.querySelectorAll('a, button')].some(el => el.clientWidth && el.scrollWidth > el.clientWidth),
+          scroll: document.documentElement.scrollWidth > innerWidth };
+      })()`);
+      assert.deepEqual(layout.outside, []);
+      assert.equal(layout.clipped, false);
+      assert.equal(layout.scroll, false);
+      assert.equal(width > 1000 ? layout.columns : layout.stacked, true);
+      const shot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
+      await writeFile(join(artifacts, 'android-' + width + '.png'), Buffer.from(shot.data, 'base64'));
+      console.log('PASS Android layout ' + width);
+    }
+    await navigate('/download/windows/');
+    await ready();
+    assert.equal((await current()).size, '205,3 МБ');
+    assert.equal((await current()).href, 'https://api.lixwey.ru/downloads/windows');
+    for (const width of [1920, 1440]) {
+      await viewport(width);
+      const aligned = await evaluate(`(() => {
+        const a = document.querySelector('.release-card').getBoundingClientRect();
+        const b = document.querySelector('.messenger').getBoundingClientRect();
+        return Math.abs(a.top - b.top) < 1 && Math.abs(a.bottom - b.bottom) < 1;
+      })()`);
+      assert.equal(aligned, true);
+    }
+    console.log('PASS Windows size, active link and equal-height cards');
+    }
+    await navigate('/');
+    for (const width of [1920, 1440, 768, 390, 320]) {
+      await viewport(width);
+      const rows = await evaluate(`(() => [...document.querySelectorAll('#download .platform')].map(row => {
+        const a = row.querySelector('a'), s = getComputedStyle(a), r = row.getBoundingClientRect(), b = a.getBoundingClientRect();
+        const text = row.querySelector('div').getBoundingClientRect();
+        return { label: a.textContent, href: a.getAttribute('href'), rowHeight: r.height, buttonHeight: b.height, buttonWidth: b.width,
+          rightGap: r.right - b.right, padding: s.padding, radius: s.borderRadius, gradient: s.backgroundImage,
+          fits: b.right <= r.right && b.left >= r.left && a.scrollWidth <= a.clientWidth && text.right <= b.left && text.top >= r.top && text.bottom <= r.bottom };
+      }))()`);
+      assert.equal(rows.length, 2);
+      assert.equal(rows[0].href, '/download/android/');
+      assert.equal(rows[1].href, '/download/windows/');
+      assert.equal(rows[0].label, 'Скачать');
+      assert.equal(rows[1].label, 'Скачать');
+      assert.equal(rows[0].fits && rows[1].fits, true);
+      const { href: androidHref, ...androidStyle } = rows[0];
+      const { href: windowsHref, ...windowsStyle } = rows[1];
+      // DOMRect may differ by tiny floating-point errors on a long page.
+      for (const key of ['rowHeight', 'buttonHeight', 'buttonWidth', 'rightGap']) {
+        assert(Math.abs(androidStyle[key] - windowsStyle[key]) < 0.01, 'Equal button/card dimensions');
+        delete androidStyle[key];
+        delete windowsStyle[key];
+      }
+      assert.deepEqual(androidStyle, windowsStyle);
+    }
+    console.log('PASS homepage equal cards, identical buttons and correct links at five widths');
+    assert.deepEqual(missing, []);
+    assert.deepEqual(errors, []);
+    console.log('Screenshots: ' + artifacts);
+  } else {
   scenario = 'loading';
   await navigate();
   await until(`document.getElementById('release-status').textContent.includes('Получаем')`);
@@ -143,12 +257,12 @@ try {
   let result = await state();
   assert.equal(result.href, 'https://api.lixwey.ru/downloads/windows');
   assert.equal(result.version, '1.0');
-  assert.equal(result.size, '65,8 МиБ');
+  assert.equal(result.size, '65,8 МБ');
   assert.match(result.date, /11 ноября 2026/);
   assert.equal(result.mandatory, false);
   console.log('PASS loading and optional release; fixed official download URL');
 
-  for (const [bytes, expected] of [[1048576, '1,0 МиБ'], [215167795, '205,2 МиБ'], [69025235, '65,8 МиБ'], [1, '0,0 МиБ'], [null, 'Не указан'], [-1, 'Не указан']]) {
+  for (const [bytes, expected] of [[1048576, '1,0 МБ'], [215167795, '205,2 МБ'], [69025235, '65,8 МБ'], [1, '0,0 МБ'], [null, 'Не указан'], [-1, 'Не указан']]) {
     fixture.size_bytes = bytes;
     await navigate();
     await ready();
@@ -225,7 +339,7 @@ try {
   }
   await navigate('/');
   assert.equal(await evaluate(`document.querySelector('#download a[href="/download/windows/"]').pathname`), '/download/windows/');
-  assert.equal(await evaluate(`document.querySelector('#download .platform a').getAttribute('href')`), '#');
+  assert.equal(await evaluate(`document.querySelector('#download .platform a').getAttribute('href')`), '/download/android/');
   for (const width of [1920, 1440, 768, 390, 320]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 600 });
     const buttons = await evaluate(`(() => {
@@ -243,7 +357,7 @@ try {
     assert.deepEqual(buttons[0], buttons[1], 'Identical button styling at ' + width);
     if (width >= 1440) {
       assert.equal(await evaluate(`(() => {
-        const row = document.querySelector('.platform-windows');
+        const row = document.querySelector('#download .platform:nth-child(2)');
         const text = row.querySelector('div').getBoundingClientRect(), button = row.querySelector('a').getBoundingClientRect();
         return text.right <= button.left && button.top < text.bottom && text.top < button.bottom;
       })()`), true, 'Desktop Windows row keeps text and button side by side');
@@ -261,8 +375,9 @@ try {
   assert.deepEqual(missing, [], 'Broken local resource paths');
   assert.deepEqual(errors, [], 'Uncaught browser errors');
   assert(releaseRequests > 10);
-  console.log('PASS homepage navigation, Android link unchanged, reports and privacy smoke checks');
+  console.log('PASS homepage navigation, Android page link, reports and privacy smoke checks');
   console.log('Screenshots: ' + artifacts);
+  }
 } finally {
   if (socket) socket.close();
   chrome.kill();

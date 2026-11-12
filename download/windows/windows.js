@@ -48,7 +48,7 @@
 
     version.textContent = data.latest_version;
     size.textContent = typeof data.size_bytes === 'number' && Number.isFinite(data.size_bytes) && data.size_bytes > 0
-      ? `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(data.size_bytes / (1024 * 1024))} МиБ`
+      ? `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(data.size_bytes / (1024 * 1024))} МБ`
       : 'Не указан';
     const published = typeof data.published_at === 'string' && data.published_at.trim() ? new Date(data.published_at) : null;
     date.textContent = published && Number.isFinite(published.getTime())
