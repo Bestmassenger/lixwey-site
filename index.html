@@ -32,6 +32,9 @@
     .platform { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; border-radius: 16px; background: rgba(255,255,255,.04); border: 1px solid var(--border); }
     .platform strong { display: block; }
     .platform span { color: var(--muted); font-size: 14px; }
+    .platform-windows { flex-wrap: wrap; }
+    .platform-windows > div { flex: 1; min-width: 90px; }
+    .platform-windows .btn { flex-shrink: 0; }
     
     .status { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space: nowrap; }
     .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
@@ -232,12 +235,12 @@
             </div>
             <a href="#" class="btn btn-primary">Скачать</a>
           </div>
-          <div class="platform">
+          <div class="platform platform-windows">
             <div>
               <strong>Windows</strong>
               <span>Приложение для ПК</span>
             </div>
-            <a href="/download/windows/" class="btn btn-ghost">Скачать</a>
+            <a href="/download/windows/" class="btn btn-primary">Скачать для Windows</a>
           </div>
         </div>
       </article>

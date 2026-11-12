@@ -127,7 +127,7 @@ try {
     return { status: byId('release-status').textContent, href: byId('windows-download').getAttribute('href'),
       disabled: byId('windows-download').getAttribute('aria-disabled'), version: byId('release-version').textContent,
       size: byId('release-size').textContent, date: byId('release-date').textContent,
-      mandatory: !byId('release-mandatory').hidden, details: !byId('release-details').hidden, retry: !byId('release-retry').hidden };
+      mandatory: Boolean(byId('release-mandatory')), details: !byId('release-details').hidden, retry: !byId('release-retry').hidden };
   })()`);
   const ready = () => until(`document.getElementById('release-panel').getAttribute('aria-busy') === 'false'`);
 
@@ -143,10 +143,19 @@ try {
   let result = await state();
   assert.equal(result.href, 'https://api.lixwey.ru/downloads/windows');
   assert.equal(result.version, '1.0');
-  assert.match(result.size, /69(?:,0)?\s*МБ/);
+  assert.equal(result.size, '65,8 МиБ');
   assert.match(result.date, /11 ноября 2026/);
   assert.equal(result.mandatory, false);
   console.log('PASS loading and optional release; fixed official download URL');
+
+  for (const [bytes, expected] of [[1048576, '1,0 МиБ'], [215167795, '205,2 МиБ'], [69025235, '65,8 МиБ'], [1, '0,0 МиБ'], [null, 'Не указан'], [-1, 'Не указан']]) {
+    fixture.size_bytes = bytes;
+    await navigate();
+    await ready();
+    assert.equal((await state()).size, expected);
+  }
+  fixture.size_bytes = 69025235;
+  console.log('PASS binary size conversion from API bytes, fixed decimal precision and invalid sizes');
 
   for (const name of ['mandatory', 'unavailable', 'http-error', 'offline', 'bad-json', 'invalid']) {
     scenario = name;
@@ -154,7 +163,7 @@ try {
     await ready();
     result = await state();
     if (name === 'mandatory') {
-      assert.equal(result.mandatory, true);
+      assert.equal(result.mandatory, false);
       assert.equal(result.href, 'https://api.lixwey.ru/downloads/windows');
     } else {
       assert.equal(result.href, null);
@@ -194,6 +203,9 @@ try {
   scenario = 'mandatory';
   await navigate();
   await ready();
+  assert.equal(await evaluate(`['Обязательное обновление', 'Информация о сборке поступает с сервера Lixwey.', 'Стилизованная иллюстрация интерфейса Lixwey'].some(text => document.body.textContent.includes(text))`), false);
+  assert.equal(await evaluate(`Boolean(document.querySelector('.messenger'))`), true);
+  console.log('PASS all three captions removed, messenger illustration preserved');
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   for (const [width, height] of [[1920,1080],[1440,900],[768,1024],[390,844],[320,568]]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
@@ -214,6 +226,32 @@ try {
   await navigate('/');
   assert.equal(await evaluate(`document.querySelector('#download a[href="/download/windows/"]').pathname`), '/download/windows/');
   assert.equal(await evaluate(`document.querySelector('#download .platform a').getAttribute('href')`), '#');
+  for (const width of [1920, 1440, 768, 390, 320]) {
+    await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 600 });
+    const buttons = await evaluate(`(() => {
+      const rows = [...document.querySelectorAll('#download .platform')];
+      return rows.map(row => {
+        const button = row.querySelector('a');
+        const style = getComputedStyle(button), r = button.getBoundingClientRect(), rr = row.getBoundingClientRect();
+        return { className: button.className, height: r.height, padding: style.padding, borderRadius: style.borderRadius,
+          background: style.backgroundImage, color: style.color, shadow: style.boxShadow, transition: style.transition,
+          fits: r.left >= rr.left && r.right <= rr.right && button.scrollWidth <= button.clientWidth };
+      });
+    })()`);
+    assert.equal(buttons[0].fits, true, 'Android button fits at ' + width);
+    assert.equal(buttons[1].fits, true, 'Windows button fits at ' + width);
+    assert.deepEqual(buttons[0], buttons[1], 'Identical button styling at ' + width);
+    if (width >= 1440) {
+      assert.equal(await evaluate(`(() => {
+        const row = document.querySelector('.platform-windows');
+        const text = row.querySelector('div').getBoundingClientRect(), button = row.querySelector('a').getBoundingClientRect();
+        return text.right <= button.left && button.top < text.bottom && text.top < button.bottom;
+      })()`), true, 'Desktop Windows row keeps text and button side by side');
+    }
+    const shot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
+    await writeFile(join(artifacts, 'homepage-' + width + '.png'), Buffer.from(shot.data, 'base64'));
+    console.log('PASS matching homepage buttons and row layout at ' + width);
+  }
   await evaluate(`document.querySelector('#download a[href="/download/windows/"]').click()`);
   await until(`location.pathname === '/download/windows/' && document.getElementById('release-panel')?.getAttribute('aria-busy') === 'false'`);
   for (const path of ['/reports/', '/privacy/']) {

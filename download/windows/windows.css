@@ -20,12 +20,10 @@
 .release-details > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; padding: 9px 0; border-bottom: 1px solid var(--border); }
 .release-details dt { color: var(--muted); }
 .release-details dd { font-weight: 600; overflow-wrap: anywhere; }
-.release-mandatory { display: inline-block; margin: 0 0 4px; padding: 5px 10px; border-radius: 999px; color: var(--warn); background: rgba(251,191,36,.12); font-size: 12px; font-weight: 600; }
 .windows-download { width: 100%; margin-top: 22px; padding: 15px 12px; text-align: center; }
 .windows-download svg { flex: 0 0 auto; width: 19px; height: 19px; }
 .windows-download[aria-disabled="true"] { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none; }
 .release-retry { width: 100%; margin-top: 12px; font-family: inherit; }
-.release-note { margin-top: 18px; color: var(--muted); font-size: 12px; }
 .desktop-preview { min-width: 0; animation: windows-enter .8s ease both; }
 .messenger { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(13,20,36,.85); box-shadow: 0 30px 70px rgba(0,0,0,.3); }
 .messenger-titlebar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 18px; border-bottom: 1px solid var(--border); font-size: 12px; }
@@ -55,7 +53,6 @@
 .bubble.outgoing { align-self: flex-end; border-radius: 12px 12px 3px 12px; background: linear-gradient(135deg, rgba(74,144,217,.7), rgba(124,92,255,.7)); }
 .mock-composer { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 0 12px 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); font-size: 10px; }
 .mock-send { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 8px; color: var(--text); background: var(--accent-2); }
-.desktop-preview figcaption { margin-top: 14px; color: var(--muted); font-size: 12px; text-align: center; }
 .windows-benefits { padding: 70px 0 80px; }
 .benefits-heading { margin-bottom: 26px; }
 .benefits-heading h2 { margin-top: 10px; font-size: clamp(26px, 3vw, 34px); line-height: 1.2; letter-spacing: -.03em; }

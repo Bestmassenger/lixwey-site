@@ -12,7 +12,6 @@
   const version = document.getElementById('release-version');
   const size = document.getElementById('release-size');
   const date = document.getElementById('release-date');
-  const mandatory = document.getElementById('release-mandatory');
   const download = document.getElementById('windows-download');
   const retry = document.getElementById('release-retry');
   let pending = false;
@@ -22,7 +21,6 @@
     download.setAttribute('aria-disabled', 'true');
     download.setAttribute('tabindex', '-1');
     details.hidden = true;
-    mandatory.hidden = true;
     explanation.hidden = true;
     explanation.textContent = '';
     version.textContent = '';
@@ -50,7 +48,7 @@
 
     version.textContent = data.latest_version;
     size.textContent = typeof data.size_bytes === 'number' && Number.isFinite(data.size_bytes) && data.size_bytes > 0
-      ? `${new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(data.size_bytes / 1_000_000)} МБ`
+      ? `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(data.size_bytes / (1024 * 1024))} МиБ`
       : 'Не указан';
     const published = typeof data.published_at === 'string' && data.published_at.trim() ? new Date(data.published_at) : null;
     date.textContent = published && Number.isFinite(published.getTime())
@@ -58,7 +56,6 @@
       : 'Не указана';
     status.textContent = 'Актуальная версия доступна';
     details.hidden = false;
-    mandatory.hidden = data.mandatory !== true;
     // Ignore download_url from the API and all query parameters: only the official endpoint is allowed.
     download.href = DOWNLOAD_URL;
     download.removeAttribute('aria-disabled');
