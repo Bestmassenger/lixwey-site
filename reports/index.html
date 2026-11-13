@@ -6,7 +6,8 @@
   <title>Обратная связь — Lixwey</title>
   <link rel="icon" type="image/png" href="../favicon.png">
   <!-- Подключаем общий файл стилей -->
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=20261113-1">
+  <script src="/js/mobile-navigation.js?v=20261113-1" defer></script>
   
   <style>
     /* Стили только для формы (чтобы не засорять общий файл) */
@@ -117,11 +118,12 @@
           <img src="../favicon.png" alt="Логотип Lixwey" class="logo-img">
           Lixwey
       </a>
-      <div class="nav-links">
+      <button type="button" class="nav-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-navigation"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
+      <div class="nav-links" id="mobile-navigation">
         <a href="/#news">Новости</a>
         <a href="/#download">Скачать</a>
         <a href="/#status">Статус</a>
-        <a href="index.html" class="btn btn-ghost" style="border-color: var(--accent); color: var(--accent);">Обратная связь</a>
+        <a href="/reports/" class="btn btn-ghost" style="border-color: var(--accent); color: var(--accent);">Обратная связь</a>
       </div>
     </div>
   </nav>

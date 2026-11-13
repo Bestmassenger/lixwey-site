@@ -132,7 +132,122 @@ try {
   })()`);
   const ready = () => until(`document.getElementById('release-panel').getAttribute('aria-busy') === 'false'`);
 
-  if (process.argv.includes('--downloads') || process.argv.includes('--homepage')) {
+  if (process.argv.includes('--navigation') || process.argv.includes('--navigation-final')) {
+    // Bounded navigation-only pass. Release requests remain mocked; no downloads or form submissions.
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    const viewport = async width => {
+      await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width <= 768 });
+      // Wait for matchMedia change events, which run on a rendering update.
+      await evaluate('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
+    };
+    const key = async (key, code, windowsVirtualKeyCode) => {
+      await send('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode, ...(key === 'Enter' ? { text: '\r', unmodifiedText: '\r' } : {}) });
+      await send('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode });
+    };
+    const click = async selector => {
+      const point = await evaluate(`(() => { const r = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`);
+      await send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', clickCount: 1, ...point });
+      await send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', clickCount: 1, ...point });
+    };
+    const menu = () => evaluate(`(() => {
+      const nav = document.querySelector('.nav'), button = nav.querySelector('.nav-toggle'), panel = document.getElementById('mobile-navigation');
+      const rect = panel.getBoundingClientRect();
+      return { expanded: button.getAttribute('aria-expanded'), label: button.getAttribute('aria-label'),
+        buttonVisible: getComputedStyle(button).display !== 'none', inert: panel.inert,
+        links: [...panel.querySelectorAll('a')].map(a => ({ href: a.getAttribute('href'), visible: getComputedStyle(a).display !== 'none' && getComputedStyle(a).visibility === 'visible', height: a.getBoundingClientRect().height })),
+        fits: rect.left >= -1 && rect.right <= innerWidth + 1,
+        focusedToggle: document.activeElement === button, focusedInPanel: panel.contains(document.activeElement) };
+    })()`);
+    const pages = process.argv.includes('--navigation-final') ? [] : ['/', '/download/windows/', '/download/android/', '/privacy/', '/reports/'];
+    for (const path of pages) {
+      await viewport(1440);
+      await navigate(path);
+      await until(`Boolean(document.querySelector('.nav--enhanced'))`);
+      for (const width of [1920, 1440, 1024, 768, 390, 320]) {
+        await viewport(width);
+        const state = await menu();
+        assert.deepEqual(state.links.map(a => a.href), ['/#news', '/#download', '/#status', '/reports/']);
+        assert.equal(state.buttonVisible, width <= 768);
+        assert.equal(state.inert, width <= 768);
+        assert.equal(state.expanded, 'false');
+        if (width > 768) {
+          assert(state.links.every(a => a.visible));
+          assert.equal(state.fits, true);
+        } else {
+          await evaluate(`document.querySelector('.nav-toggle').focus()`);
+          await key('Tab', 'Tab', 9);
+          assert.equal((await menu()).focusedInPanel, false, 'Closed links excluded from Tab');
+          const before = await evaluate(`document.querySelector('main, header.hero').getBoundingClientRect().top`);
+          await click('.nav-toggle');
+          const opened = await menu();
+          assert.equal(opened.expanded, 'true');
+          assert.equal(opened.label, 'Закрыть меню');
+          assert.equal(opened.inert, false);
+          assert.equal(opened.fits, true);
+          assert(opened.links.every(a => a.visible && a.height >= 44));
+          const after = await evaluate(`document.querySelector('main, header.hero').getBoundingClientRect().top`);
+          assert(Math.abs(before - after) < 1, 'Opening must not shift content');
+          assert.equal(await evaluate(`(() => { const panel = document.getElementById('mobile-navigation'), r = panel.getBoundingClientRect(); return panel.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)); })()`), true, 'Panel above main content');
+          await click('.nav-toggle');
+          assert.equal((await menu()).expanded, 'false');
+        }
+      }
+      await viewport(390);
+      await evaluate(`document.querySelector('.nav-toggle').focus()`);
+      await key('Enter', 'Enter', 13);
+      assert.equal((await menu()).expanded, 'true');
+      await key('Tab', 'Tab', 9);
+      assert.equal(await evaluate(`document.activeElement === document.querySelector('#mobile-navigation a')`), true);
+      await key('Escape', 'Escape', 27);
+      assert.equal((await menu()).expanded, 'false');
+      assert.equal((await menu()).focusedToggle, true);
+      await click('.nav-toggle');
+      await send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', clickCount: 1, x: 1, y: 160 });
+      await send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', clickCount: 1, x: 1, y: 160 });
+      assert.equal((await menu()).expanded, 'false');
+      for (let i = 1; i <= 4; i++) {
+        await click('.nav-toggle');
+        // Preserve this test page while checking each link's close handler.
+        await evaluate(`document.querySelector('#mobile-navigation a:nth-child(${i})').addEventListener('click', e => e.preventDefault(), { once: true })`);
+        await click(`#mobile-navigation a:nth-child(${i})`);
+        assert.equal((await menu()).expanded, 'false');
+        assert.equal((await menu()).inert, true);
+      }
+      await click('.nav-toggle');
+      await viewport(1024);
+      assert.equal((await menu()).expanded, 'false');
+      assert.equal((await menu()).inert, false);
+      assert((await menu()).links.every(a => a.visible));
+      await viewport(390);
+      assert.equal((await menu()).expanded, 'false');
+      await click('.nav-toggle');
+      const shot = await send('Page.captureScreenshot', { format: 'png' });
+      await writeFile(join(artifacts, 'navigation-' + (path === '/' ? 'home' : path.split('/').filter(Boolean).join('-')) + '.png'), Buffer.from(shot.data, 'base64'));
+      console.log('PASS ' + path + ': six widths; open/close, outside click, Escape, links, keyboard, stacking, desktop reset');
+    }
+    if (!pages.length) {
+      await viewport(390);
+      await navigate('/reports/');
+      await click('.nav-toggle');
+    }
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
+    await click('.nav-toggle');
+    await click('.nav-toggle');
+    await until(`Number(getComputedStyle(document.getElementById('mobile-navigation')).opacity) === 1`);
+    assert.equal(await evaluate(`getComputedStyle(document.querySelector('.nav-toggle span')).transitionDuration.split(',').every(value => value.trim() === '0.18s')`), true);
+    console.log('PASS smooth animation and reduced-motion checks');
+    // Real navigation from a nested page to a homepage section.
+    await navigate('/download/android/');
+    await click('.nav-toggle');
+    await until(`Number(getComputedStyle(document.getElementById('mobile-navigation')).opacity) === 1`);
+    await click('#mobile-navigation a:nth-child(2)');
+    await until(`location.pathname === '/' && location.hash === '#download' && Boolean(document.querySelector('.nav--enhanced'))`);
+    assert.equal((await menu()).expanded, 'false');
+    assert.deepEqual(missing, []);
+    assert.deepEqual(errors, []);
+    console.log('PASS nested-page section navigation; no missing resources or uncaught JS errors');
+    console.log('Screenshots: ' + artifacts);
+  } else if (process.argv.includes('--downloads') || process.argv.includes('--homepage')) {
     // One bounded pass for Android states and both platforms' download layouts.
     fixture.size_bytes = 215272653;
     const current = () => evaluate(`(() => {
