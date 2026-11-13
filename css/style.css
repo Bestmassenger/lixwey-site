@@ -196,7 +196,14 @@ footer {
 .footer-links a { color: var(--muted); text-decoration: none; }
 .footer-links a:hover { color: var(--text); }
 
-.footer-socials { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 20px; }
+.footer-socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 0;
+  margin-bottom: 36px;
+}
 .footer-socials-title { color: var(--muted); font-size: 13px; font-weight: 600; }
 .footer-social-links { display: flex; flex-wrap: wrap; gap: 8px; }
 .footer-social-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255,255,255,.04); color: var(--muted); text-decoration: none; font-size: 13px; transition: background .2s ease, border-color .2s ease, color .2s ease; }
