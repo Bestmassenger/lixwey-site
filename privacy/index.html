@@ -2,13 +2,15 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <script src="/js/i18n-dictionary.js?v=20261113-5"></script>
+  <script src="/js/i18n.js?v=20261113-5"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Политика конфиденциальности — Lixwey</title>
   <meta name="description" content="Политика Lixwey в отношении обработки персональных данных.">
   <meta name="theme-color" content="#070b16">
   <link rel="icon" type="image/png" href="../favicon.png">
-  <link rel="stylesheet" href="/css/style.css?v=20261113-4">
-  <script src="/js/mobile-navigation.js?v=20261113-1" defer></script>
+  <link rel="stylesheet" href="/css/style.css?v=20261113-5">
+  <script src="/js/mobile-navigation.js?v=20261113-5" defer></script>
   
   
   <style>
@@ -279,6 +281,12 @@
           <a href="/#download">Приложение</a>
       </div>
     </div>
+    <div class="container footer-language" role="group" aria-label="Язык сайта">
+      <span aria-hidden="true">🌐</span>
+      <button type="button" data-language="ru" lang="ru" aria-label="Переключить на русский" aria-pressed="true" disabled>Русский</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" data-language="en" lang="en" aria-label="Переключить на английский" aria-pressed="false" disabled>English</button>
+    </div>
   </footer>
 
   <script src="../policy-config.js"></script>
@@ -289,9 +297,14 @@
     if (revisionElement && window.LIXWEY_POLICY) {
         const revision = window.LIXWEY_POLICY.revisionDate;
 
-        revisionElement.textContent = revision;
-
         const [day, month, year] = revision.split(".");
+
+        const renderRevision = () => {
+          revisionElement.textContent = window.LixweyI18n.language === 'ru' ? revision
+            : new Intl.DateTimeFormat(window.LixweyI18n.locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${year}-${month}-${day}T00:00:00Z`));
+        };
+        renderRevision();
+        window.addEventListener('lixwey:languagechange', renderRevision);
 
         revisionElement.setAttribute(
             "datetime",

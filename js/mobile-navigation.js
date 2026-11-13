@@ -13,7 +13,7 @@
     open = mobile.matches && value;
     if (!open && restoreFocus && mobile.matches) toggle.focus({ preventScroll: true });
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    window.LixweyI18n.setAttribute(toggle, 'aria-label', open ? 'Закрыть меню' : 'Открыть меню');
     nav.classList.toggle('nav--open', open);
     panel.inert = mobile.matches && !open;
     if (mobile.matches && !open) panel.setAttribute('aria-hidden', 'true');

@@ -2,12 +2,15 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <script src="/js/i18n-dictionary.js?v=20261113-5"></script>
+  <script src="/js/i18n.js?v=20261113-5"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Обратная связь — Lixwey</title>
+  <meta name="description" content="Свяжитесь с Lixwey: сообщите о проблеме, отправьте жалобу или предложите улучшение.">
   <link rel="icon" type="image/png" href="../favicon.png">
   <!-- Подключаем общий файл стилей -->
-  <link rel="stylesheet" href="/css/style.css?v=20261113-4">
-  <script src="/js/mobile-navigation.js?v=20261113-1" defer></script>
+  <link rel="stylesheet" href="/css/style.css?v=20261113-5">
+  <script src="/js/mobile-navigation.js?v=20261113-5" defer></script>
   
   <style>
     /* Стили только для формы (чтобы не засорять общий файл) */
@@ -258,11 +261,18 @@
         <a href="/#download">Приложение</a>
       </div>
     </div>
+    <div class="container footer-language" role="group" aria-label="Язык сайта">
+      <span aria-hidden="true">🌐</span>
+      <button type="button" data-language="ru" lang="ru" aria-label="Переключить на русский" aria-pressed="true" disabled>Русский</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" data-language="en" lang="en" aria-label="Переключить на английский" aria-pressed="false" disabled>English</button>
+    </div>
   </footer>
 
   <script src="../policy-config.js"></script>
 
   <script>
+    const reportI18n = window.LixweyI18n;
     const form = document.getElementById("report-form");
     const typeSelect = document.getElementById("report_type");
     const customGroup = document.getElementById("custom-type-group");
@@ -294,7 +304,7 @@
     function renderPreviews() {
       releasePreviewUrls();
       previewContainer.replaceChildren();
-      fileCounter.textContent = `${selectedFiles.length} из ${MAX_FILES}`;
+      reportI18n.setText(fileCounter, '{count} из {max}', { count: selectedFiles.length, max: MAX_FILES });
 
       selectedFiles.forEach((file, index) => {
         const item = document.createElement("div");
@@ -303,11 +313,13 @@
         const url = URL.createObjectURL(file);
         previewUrls.push(url);
         image.src = url;
+        reportI18n.setAttribute(image, 'alt', 'Вложение: {name}', { name: file.name });
         
         const removeButton = document.createElement("button");
         removeButton.type = "button";
         removeButton.className = "remove-btn";
         removeButton.textContent = "×";
+        reportI18n.setAttribute(removeButton, 'aria-label', 'Удалить вложение {name}', { name: file.name });
         removeButton.addEventListener("click", () => {
           selectedFiles.splice(index, 1);
           isFormDirty = true; // <--- Добавь эту строку
@@ -341,12 +353,12 @@
       if (currentLength < minLength) {
         // Пока меньше 10 символов — показываем, сколько не хватает
         const remaining = minLength - currentLength;
-        counter.textContent = `Минимум ${remaining} симв.`;
+        reportI18n.setText(counter, 'Минимум {count} симв.', { count: remaining });
         counter.style.color = '#fbbf24'; // Желтый цвет (предупреждение)
       } else {
         // Когда набрали минимум — показываем, сколько осталось до максимума
         const remaining = maxLength - currentLength;
-        counter.textContent = `Осталось ${remaining} симв.`;
+        reportI18n.setText(counter, 'Осталось {count} симв.', { count: remaining });
         counter.style.color = 'var(--muted)'; // Обычный серый цвет
       }
     }
@@ -399,9 +411,9 @@
       e.stopPropagation();
 
       const submitBtn = form.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerHTML;
+      const submitLabel = submitBtn.querySelector('span');
       submitBtn.disabled = true;
-      submitBtn.textContent = "Отправка...";
+      reportI18n.setText(submitLabel, 'Отправка...');
 
       // Собираем данные формы
       const formData = new FormData(form);
@@ -414,14 +426,10 @@
         !policy.version ||
         !policy.revisionDate
       ) {
-        alert(
-          "Не удалось определить действующую редакцию политики " +
-          "конфиденциальности.\n\n" +
-          "Обновите страницу и попробуйте ещё раз."
-        );
+        alert(reportI18n.t('Не удалось определить действующую редакцию политики конфиденциальности.\n\nОбновите страницу и попробуйте ещё раз.'));
 
         submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
+        reportI18n.setText(submitLabel, 'Отправить обращение');
         return;
       }
 
@@ -449,15 +457,7 @@
 
         // Версия или дата редакции политики устарела
         if (response.status === 409) {
-          alert(
-            "Политика конфиденциальности обновлена.\n\n" +
-            "Версия или дата редакции политики, с которой вы " +
-            "ознакомились, отличается от актуальной.\n\n" +
-            "Обращение не отправлено. Обновите страницу, " +
-            "ознакомьтесь с действующей редакцией политики " +
-            "и подтвердите согласие повторно.\n\n" +
-            "Если проблема сохраняется, попробуйте ещё раз через 5 минут."
-          );
+          alert(reportI18n.t('Политика конфиденциальности обновлена.\n\nВерсия или дата редакции политики, с которой вы ознакомились, отличается от актуальной.\n\nОбращение не отправлено. Обновите страницу, ознакомьтесь с действующей редакцией политики и подтвердите согласие повторно.\n\nЕсли проблема сохраняется, попробуйте ещё раз через 5 минут.'));
 
           return;
         }
@@ -474,53 +474,75 @@
             let waitText;
 
             if (hours > 0) {
-                waitText = `${hours} ч. ${minutes} мин.`;
+                waitText = reportI18n.t('{hours} ч. {minutes} мин.', { hours, minutes });
             } else {
-                waitText = `${minutes} мин.`;
+                waitText = reportI18n.t('{minutes} мин.', { minutes });
             }
 
-            alert(
-                "Вы отправили слишком много обращений.\n" +
-                `Попробуйте через ${waitText}`
-            );
+            alert(reportI18n.t('Вы отправили слишком много обращений.\nПопробуйте через {wait}', { wait: waitText }));
 
             return;
         }
 
         // Redis или сервер временно недоступен
         if (response.status === 503) {
-            alert(
-                "Сервис временно недоступен. Попробуйте позже."
-            );
+            alert(reportI18n.t('Сервис временно недоступен. Попробуйте позже.'));
             return;
         }
         
         if (data.success) {
-          alert(`Спасибо! Ваше обращение №${data.report_id} принято.`);
+          alert(reportI18n.t('Спасибо! Ваше обращение №{id} принято.', { id: data.report_id }));
           
           form.reset();
           selectedFiles = [];
           renderPreviews();
+          updateMessageCounter(document.getElementById('message'));
           
           // Сбрасываем защиту от закрытия
           isFormDirty = false; 
         } else {
-            alert(
-                "Ошибка: " +
-                (data.message || (
+            alert(reportI18n.t('Ошибка: {message}', { message: reportI18n.t(data.message || (
                     typeof data.detail === "string"
                         ? data.detail
                         : "Неизвестная ошибка"
-                ))
-            );
+                )) }));
         }
       } catch (err) {
         console.error("Fetch error:", err);
-        alert("Ошибка соединения с сервером. Попробуйте позже.");
+        alert(reportI18n.t('Ошибка соединения с сервером. Попробуйте позже.'));
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
+        reportI18n.setText(submitLabel, 'Отправить обращение');
       }
+    });
+
+    // Browser validation messages otherwise follow the browser UI, not <html lang>.
+    function localizeValidity(control) {
+      if (!control?.willValidate) return;
+      control.setCustomValidity('');
+      let source = '';
+      let params = {};
+      if (control.validity.valueMissing) source = control.type === 'checkbox'
+        ? 'Подтвердите согласие на обработку персональных данных.' : 'Заполните это поле.';
+      else if (control.validity.typeMismatch && control.type === 'email') source = 'Укажите корректный email.';
+      else if (control.value && control.minLength > 0 && control.value.length < control.minLength) {
+        source = 'Введите не менее {min} символов.'; params = { min: control.minLength };
+      } else if (control.maxLength > 0 && control.value.length > control.maxLength) {
+        source = 'Введите не более {max} символов.'; params = { max: control.maxLength };
+      } else if (!control.validity.valid) source = 'Проверьте значение поля.';
+      if (source) control.setCustomValidity(reportI18n.t(source, params));
+    }
+    form.addEventListener('invalid', event => localizeValidity(event.target), true);
+    form.addEventListener('input', event => localizeValidity(event.target));
+    form.addEventListener('change', event => localizeValidity(event.target));
+    form.addEventListener('reset', () => {
+      for (const control of form.elements) control.setCustomValidity?.('');
+      queueMicrotask(toggleCustomType);
+    });
+    window.addEventListener('lixwey:languagechange', () => {
+      reportI18n.setText(fileCounter, '{count} из {max}', { count: selectedFiles.length, max: MAX_FILES });
+      updateMessageCounter(document.getElementById('message'));
+      for (const control of form.elements) localizeValidity(control);
     });
 
   </script>

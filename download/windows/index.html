@@ -2,15 +2,17 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <script src="/js/i18n-dictionary.js?v=20261113-5"></script>
+  <script src="/js/i18n.js?v=20261113-5"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lixwey для Windows — скачать приложение</title>
   <meta name="description" content="Скачайте Lixwey для Windows с официального сайта. Актуальная версия, размер установщика и дата публикации.">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
-  <link rel="stylesheet" href="/css/style.css?v=20261113-4">
-  <script src="/js/mobile-navigation.js?v=20261113-1" defer></script>
+  <link rel="stylesheet" href="/css/style.css?v=20261113-5">
+  <script src="/js/mobile-navigation.js?v=20261113-5" defer></script>
   <link rel="stylesheet" href="/download/windows/windows.css?v=20261112-2">
-  <script src="/download/windows/windows.js?v=20261112-2" defer></script>
+  <script src="/download/windows/windows.js?v=20261113-5" defer></script>
 </head>
 <body class="windows-page">
   <div class="aurora" aria-hidden="true"></div>
@@ -68,12 +70,12 @@
             <div class="chat-list">
               <div class="mock-heading">Сообщения <span>+</span></div>
               <div class="mock-search">Поиск диалога</div>
-              <div class="chat-item selected"><span class="avatar">А</span><div><strong>Александра</strong><span>Отлично, до встречи!</span></div><small>12:42</small></div>
-              <div class="chat-item"><span class="avatar avatar-blue">М</span><div><strong>Михаил</strong><span>Спасибо за сообщение</span></div></div>
-              <div class="chat-item"><span class="avatar avatar-green">Д</span><div><strong>Дарья</strong><span>Хорошего дня!</span></div></div>
+              <div class="chat-item selected"><span class="avatar" translate="no">А</span><div><strong translate="no">Александра</strong><span>Отлично, до встречи!</span></div><small>12:42</small></div>
+              <div class="chat-item"><span class="avatar avatar-blue" translate="no">М</span><div><strong translate="no">Михаил</strong><span>Спасибо за сообщение</span></div></div>
+              <div class="chat-item"><span class="avatar avatar-green" translate="no">Д</span><div><strong translate="no">Дарья</strong><span>Хорошего дня!</span></div></div>
             </div>
             <div class="conversation">
-              <div class="conversation-heading"><span class="avatar">А</span><strong>Александра</strong></div>
+              <div class="conversation-heading"><span class="avatar" translate="no">А</span><strong translate="no">Александра</strong></div>
               <div class="message-history"><span class="mock-day">Сегодня</span><div class="bubble">Привет! Как проходит день?<small>12:40</small></div><div class="bubble outgoing">Привет! Всё отлично. Давай встретимся вечером?<small>12:41</small></div><div class="bubble">Отлично, до встречи!<small>12:42</small></div></div>
               <div class="mock-composer"><span>Написать сообщение…</span><span class="mock-send">↑</span></div>
             </div>
@@ -119,6 +121,12 @@
         <a href="/#status">Статус</a>
         <a href="/#download">Приложение</a>
       </div>
+    </div>
+    <div class="container footer-language" role="group" aria-label="Язык сайта">
+      <span aria-hidden="true">🌐</span>
+      <button type="button" data-language="ru" lang="ru" aria-label="Переключить на русский" aria-pressed="true" disabled>Русский</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" data-language="en" lang="en" aria-label="Переключить на английский" aria-pressed="false" disabled>English</button>
     </div>
   </footer>
 </body>

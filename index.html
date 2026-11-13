@@ -2,13 +2,15 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <script src="/js/i18n-dictionary.js?v=20261113-5"></script>
+  <script src="/js/i18n.js?v=20261113-5"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lixwey — социальная сеть нового поколения</title>
   <meta name="description" content="Lixwey — современная социальная сеть для общения, публикаций и сообществ.">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-  <link rel="stylesheet" href="/css/style.css?v=20261113-4">
-  <script src="/js/mobile-navigation.js?v=20261113-1" defer></script>
+  <link rel="stylesheet" href="/css/style.css?v=20261113-5">
+  <script src="/js/mobile-navigation.js?v=20261113-5" defer></script>
   
   <style>
     /* Стили только для главной страницы */
@@ -298,6 +300,12 @@
         <a href="#download">Приложение</a>
       </div>
     </div>
+    <div class="container footer-language" role="group" aria-label="Язык сайта">
+      <span aria-hidden="true">🌐</span>
+      <button type="button" data-language="ru" lang="ru" aria-label="Переключить на русский" aria-pressed="true" disabled>Русский</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" data-language="en" lang="en" aria-label="Переключить на английский" aria-pressed="false" disabled>English</button>
+    </div>
   </footer>
 
   <script>
@@ -305,7 +313,7 @@
 
     async function checkApi() {
       apiStatus.className = "status status-warn";
-      apiStatus.textContent = "Проверка…";
+      window.LixweyI18n.setText(apiStatus, "Проверка…");
 
       try {
         const response = await fetch("https://api.lixwey.ru/ping", {
@@ -315,14 +323,14 @@
 
         if (response.ok) {
           apiStatus.className = "status status-ok";
-          apiStatus.textContent = "Работает";
+          window.LixweyI18n.setText(apiStatus, "Работает");
         } else {
           apiStatus.className = "status status-err";
-          apiStatus.textContent = "Проблемы";
+          window.LixweyI18n.setText(apiStatus, "Проблемы");
         }
       } catch {
         apiStatus.className = "status status-err";
-        apiStatus.textContent = "Недоступен";
+        window.LixweyI18n.setText(apiStatus, "Недоступен");
       }
     }
 

@@ -87,11 +87,16 @@ try {
   await send('Page.enable');
   await send('Runtime.enable');
   await send('Network.enable');
+  if (!process.argv.includes('--i18n')) {
+    // Existing Russian UI assertions must not depend on the host browser language.
+    await send('Page.addScriptToEvaluateOnNewDocument', { source: "localStorage.setItem('lixwey.language', 'ru');" });
+  }
   on('Runtime.exceptionThrown', data => errors.push(data));
   const fixture = { available: true, latest_version: '1.0', mandatory: false, size_bytes: 69025235, published_at: '2026-11-11T09:56:53.367931+00:00', download_url: 'https://untrusted.example/setup.exe' };
   let scenario = 'available';
   let held;
   let releaseRequests = 0;
+  let reportFixture = { status: 200, data: { success: true, report_id: 'test-report' } };
   async function respond(requestId) {
     if (scenario === 'offline') return send('Fetch.failRequest', { requestId, errorReason: 'InternetDisconnected' });
     const body = scenario === 'unavailable' ? { available: false } : { ...fixture, mandatory: scenario === 'mandatory' };
@@ -105,6 +110,14 @@ try {
   }
   on('Fetch.requestPaused', async ({ requestId, request }) => {
     try {
+      if (request.url === 'https://api.lixwey.ru/report' && request.method === 'POST') {
+        if (reportFixture.delay) await new Promise(resolve => setTimeout(resolve, reportFixture.delay));
+        if (reportFixture.offline) await send('Fetch.failRequest', { requestId, errorReason: 'InternetDisconnected' });
+        else await send('Fetch.fulfillRequest', { requestId, responseCode: reportFixture.status,
+          responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, { name: 'Access-Control-Allow-Origin', value: '*' }, { name: 'Retry-After', value: '3660' }],
+          body: Buffer.from(JSON.stringify(reportFixture.data)).toString('base64') });
+        return;
+      }
       if (/\/api\/updates\/(windows|android)/.test(request.url)) {
         const platform = request.url.includes('/updates/android') ? 'android' : 'windows';
         assert.equal(request.url, `https://api.lixwey.ru/api/updates/${platform}?${platform === 'android' ? 'current_version_code=0' : 'current_version=0.0.0'}`);
@@ -132,7 +145,13 @@ try {
   })()`);
   const ready = () => until(`document.getElementById('release-panel').getAttribute('aria-busy') === 'false'`);
 
-  if (process.argv.includes('--navigation') || process.argv.includes('--navigation-final')) {
+  if (process.argv.includes('--i18n')) {
+    const { checkLocalization } = await import('./localization-cases.mjs');
+    await checkLocalization({ send, evaluate, navigate, until, on, artifacts,
+      setScenario: value => { scenario = value; }, setReport: value => { reportFixture = value; } });
+    assert.deepEqual(missing, [], 'Missing local resources');
+    assert.deepEqual(errors, [], 'Uncaught JavaScript exceptions');
+  } else if (process.argv.includes('--navigation') || process.argv.includes('--navigation-final')) {
     // Bounded navigation-only pass. Release requests remain mocked; no downloads or form submissions.
     await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
     const viewport = async width => {
